@@ -1,1126 +1,2771 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Apna Store - Online Shopping</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-*{padding:0;margin:0;box-sizing:border-box;}
-:root{
-  --primary:#16a34a;
-  --primary-light:#22c55e;
-  --primary-dark:#15803d;
-  --accent:#f59e0b;
-  --bg:#f8fafc;
-  --bg2:#ffffff;
-  --text:#111827;
-  --text2:#6b7280;
-  --border:#e5e7eb;
-  --shadow:0 2px 8px rgba(0,0,0,.08);
-  --shadow-lg:0 8px 32px rgba(0,0,0,.12);
-  --radius:12px;
-  --nav-h:64px;
-}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apna Store - Online Shopping</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ═══════════════════ RESET & ROOT ═══════════════════ */
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
 
-/* ── NETWORK BADGE ── */
-#networkBadge{position:fixed;top:calc(var(--nav-h) + 8px);left:50%;transform:translateX(-50%);z-index:300;padding:6px 16px;border-radius:20px;font-size:.78rem;font-weight:600;display:none;gap:6px;align-items:center;white-space:nowrap;box-shadow:var(--shadow-lg);}
-#networkBadge.slow{background:#fef3c7;color:#92400e;border:1px solid #f59e0b;display:flex;}
-#networkBadge.fast{background:#dcfce7;color:#166534;border:1px solid #22c55e;display:flex;}
-/* Lightweight mode (slow internet) */
-body.lightweight .card-img-wrap img{opacity:.4;filter:blur(1px);}
-body.lightweight .card{box-shadow:none;border:1px solid var(--border);}
-body.lightweight .card:hover{transform:none;}
-body.lightweight .spinner{border-color:#e5e7eb;border-top-color:#6b7280;}
+    :root {
+      --primary: #16a34a;
+      --primary-light: #22c55e;
+      --primary-dark: #15803d;
+      --primary-xlight: #dcfce7;
+      --accent-amber: #f59e0b;
+      --accent-purple: #8b5cf6;
+      --accent-blue: #3b82f6;
+      --accent-rose: #f43f5e;
+      --accent-orange: #f97316;
+      --accent-teal: #14b8a6;
+      --accent-indigo: #6366f1;
+      --accent-pink: #ec4899;
+      --bg: #f0fdf4;
+      --bg2: #ffffff;
+      --bg3: #f8fafc;
+      --text: #0f172a;
+      --text2: #64748b;
+      --text3: #94a3b8;
+      --border: #e2e8f0;
+      --border2: #cbd5e1;
+      --shadow: 0 1px 4px rgba(0, 0, 0, .07), 0 2px 8px rgba(0, 0, 0, .05);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, .1);
+      --shadow-lg: 0 8px 32px rgba(0, 0, 0, .12);
+      --shadow-xl: 0 20px 60px rgba(0, 0, 0, .15);
+      --radius: 14px;
+      --nav-h: 64px;
+    }
 
-/* ── TOAST ── */
-#toast-container{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:10px;}
-.toast{background:#1f2937;color:#fff;padding:12px 20px;border-radius:10px;font-size:.9rem;min-width:220px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-lg);animation:slideIn .3s ease;}
-.toast.success{border-left:4px solid var(--primary-light);}
-.toast.error{border-left:4px solid #ef4444;}
-.toast.info{border-left:4px solid #3b82f6;}
-@keyframes slideIn{from{transform:translateX(100px);opacity:0}to{transform:translateX(0);opacity:1}}
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
 
-/* ── NAVBAR ── */
-.navbar{background:linear-gradient(135deg,var(--primary),var(--primary-dark));height:var(--nav-h);position:sticky;top:0;z-index:200;display:flex;align-items:center;padding:0 24px;gap:12px;box-shadow:0 2px 12px rgba(22,163,74,.3);}
-.nav-logo{font-family:'Playfair Display',serif;color:#fff;font-size:1.5rem;font-weight:700;cursor:pointer;flex-shrink:0;}
-.nav-logo span{color:#bbf7d0;}
-.nav-search{flex:1;max-width:440px;position:relative;}
-.nav-search input{width:100%;padding:8px 16px 8px 40px;border-radius:24px;border:none;outline:none;font-size:.9rem;background:rgba(255,255,255,.15);color:#fff;}
-.nav-search input::placeholder{color:rgba(255,255,255,.7);}
-.nav-search .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.8);font-size:1rem;}
-.nav-actions{margin-left:auto;display:flex;align-items:center;gap:8px;flex-shrink:0;}
-.nav-btn{background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 14px;border-radius:8px;cursor:pointer;font-size:.85rem;display:flex;align-items:center;gap:6px;transition:.2s;font-family:'DM Sans',sans-serif;font-weight:500;text-decoration:none;}
-.nav-btn:hover{background:rgba(255,255,255,.28);}
-.nav-btn .badge{background:#ef4444;color:#fff;border-radius:50%;width:18px;height:18px;font-size:.7rem;display:inline-flex;align-items:center;justify-content:center;font-weight:700;}
-/* Gemini AI button – distinct shimmer */
-.nav-btn.ai-btn{background:linear-gradient(135deg,rgba(99,102,241,.5),rgba(139,92,246,.5));border:1px solid rgba(255,255,255,.25);position:relative;overflow:hidden;}
-.nav-btn.ai-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.18) 50%,transparent 70%);transform:translateX(-100%);transition:.5s;}
-.nav-btn.ai-btn:hover::after{transform:translateX(100%);}
-.nav-btn.ai-btn:hover{background:linear-gradient(135deg,rgba(99,102,241,.7),rgba(139,92,246,.7));}
-.nav-user{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);padding:6px 14px;border-radius:8px;cursor:pointer;}
-.nav-user-avatar{width:28px;height:28px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;color:#fff;}
-.nav-user-name{color:#fff;font-size:.85rem;font-weight:500;}
+    /* ═══ TOAST ═══ */
+    #toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
 
-/* ── PAGES ── */
-.page{display:none;}
-.page.active{display:block;}
+    .toast {
+      background: #1e293b;
+      color: #fff;
+      padding: 13px 20px;
+      border-radius: 12px;
+      font-size: .875rem;
+      min-width: 230px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: var(--shadow-xl);
+      animation: slideIn .3s cubic-bezier(.34, 1.56, .64, 1);
+      pointer-events: auto;
+    }
 
-/* ── AUTH MODAL ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px);}
-.modal-overlay.hidden{display:none;}
-.modal{background:#fff;border-radius:20px;padding:40px;width:100%;max-width:420px;box-shadow:var(--shadow-lg);position:relative;}
-.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--text2);transition:.2s;}
-.modal-close:hover{color:var(--text);}
-.modal-logo{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--primary);text-align:center;margin-bottom:4px;}
-.modal-sub{text-align:center;color:var(--text2);font-size:.9rem;margin-bottom:28px;}
-.auth-tabs{display:flex;gap:0;border-radius:10px;overflow:hidden;border:1px solid var(--border);margin-bottom:28px;}
-.auth-tab{flex:1;padding:10px;text-align:center;cursor:pointer;font-size:.9rem;font-weight:500;background:#fff;border:none;transition:.2s;font-family:'DM Sans',sans-serif;}
-.auth-tab.active{background:var(--primary);color:#fff;}
-.form-group{margin-bottom:16px;}
-.form-group label{display:block;font-size:.85rem;font-weight:500;color:var(--text);margin-bottom:6px;}
-.form-group input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:.9rem;outline:none;transition:.2s;font-family:'DM Sans',sans-serif;}
-.form-group input:focus{border-color:var(--primary);}
-.btn-primary{width:100%;padding:12px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif;}
-.btn-primary:hover{background:var(--primary-dark);}
-.auth-switch{text-align:center;margin-top:16px;font-size:.85rem;color:var(--text2);}
-.auth-switch a{color:var(--primary);cursor:pointer;font-weight:500;}
+    .toast.success {
+      border-left: 4px solid var(--primary-light);
+    }
 
-/* ── HERO / FILTERS ── */
-.hero{background:linear-gradient(135deg,#ecfdf5,#d1fae5);padding:32px 24px 24px;text-align:center;border-bottom:1px solid #a7f3d0;}
-.hero h1{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--text);margin-bottom:8px;}
-.hero h1 span{color:var(--primary);}
-.hero p{color:var(--text2);font-size:1rem;}
-.filter-section{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;padding:20px 24px;max-width:1200px;margin:0 auto;}
-.filter-btn{padding:8px 18px;border-radius:20px;border:1.5px solid var(--border);background:#fff;color:var(--text);font-size:.875rem;font-weight:500;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif;}
-.filter-btn:hover{border-color:var(--primary);color:var(--primary);}
-.filter-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+    .toast.error {
+      border-left: 4px solid var(--accent-rose);
+    }
 
-/* ── SORT + SCROLL TOGGLE BAR ── */
-.sort-bar{display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto;padding:0 24px 16px;flex-wrap:wrap;gap:10px;}
-.sort-bar select{padding:8px 14px;border-radius:8px;border:1.5px solid var(--border);background:#fff;font-size:.875rem;outline:none;cursor:pointer;font-family:'DM Sans',sans-serif;}
-.results-count{font-size:.875rem;color:var(--text2);}
-.sort-bar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-/* Scroll mode toggle */
-.scroll-toggle{display:flex;align-items:center;gap:6px;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:.8rem;font-weight:500;cursor:pointer;transition:.2s;color:var(--text2);font-family:'DM Sans',sans-serif;}
-.scroll-toggle:hover{border-color:var(--primary);color:var(--primary);}
-.scroll-toggle.active{background:var(--primary);border-color:var(--primary);color:#fff;}
-.scroll-toggle .dot{width:8px;height:8px;border-radius:50%;background:currentColor;}
+    .toast.info {
+      border-left: 4px solid var(--accent-blue);
+    }
 
-/* ── CARDS GRID (flexbox + better spacing) ── */
-.cards-grid{
-  display:flex;
-  flex-wrap:wrap;
-  gap:20px;
-  max-width:1200px;
-  margin:0 auto;
-  padding:0 24px 32px;
-  justify-content:flex-start;
-}
-/* Each card in flex context */
-.cards-grid .card{
-  flex:1 1 260px;
-  max-width:320px;
-  min-width:220px;
-}
-/* List view */
-.cards-grid.list-view{flex-direction:column;}
-.cards-grid.list-view .card{max-width:100%;min-width:unset;flex:unset;display:flex;flex-direction:row;}
-.cards-grid.list-view .card-img-wrap{flex-shrink:0;width:140px;height:140px;}
-.cards-grid.list-view .card-body{flex:1;}
+    @keyframes slideIn {
+      from {
+        transform: translateX(120px);
+        opacity: 0
+      }
 
-.card{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:.3s;display:flex;flex-direction:column;position:relative;}
-.card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);}
-.card-badge{position:absolute;top:12px;left:12px;background:var(--accent);color:#fff;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:20px;}
-.wishlist-btn{position:absolute;top:10px;right:10px;background:#fff;border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow);font-size:1.1rem;transition:.2s;z-index:1;}
-.wishlist-btn:hover{transform:scale(1.15);}
-.wishlist-btn.active{color:#ef4444;}
-.card-img-wrap{height:220px;background:#f9fafb;display:flex;align-items:center;justify-content:center;overflow:hidden;}
-.card-img-wrap img{max-height:190px;max-width:90%;object-fit:contain;transition:.3s;}
-.card:hover .card-img-wrap img{transform:scale(1.05);}
-.card-body{padding:16px;flex:1;display:flex;flex-direction:column;}
-.card-cat{font-size:.75rem;color:var(--text2);background:#f3f4f6;padding:2px 10px;border-radius:20px;display:inline-block;text-transform:capitalize;margin-bottom:8px;}
-.card-title{font-size:.95rem;font-weight:600;color:var(--text);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:6px;min-height:2.6em;}
-.card-rating{display:flex;align-items:center;gap:4px;font-size:.82rem;color:var(--text2);margin-bottom:10px;}
-.stars{color:#f59e0b;}
-.card-footer-row{display:flex;align-items:center;justify-content:space-between;margin-top:auto;}
-.card-price{font-size:1.2rem;font-weight:700;color:var(--primary);}
-.add-cart-btn{background:var(--primary);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:.85rem;font-weight:600;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif;}
-.add-cart-btn:hover{background:var(--primary-dark);}
-.add-cart-btn.in-cart{background:#dcfce7;color:var(--primary);border:1.5px solid var(--primary);}
+      to {
+        transform: translateX(0);
+        opacity: 1
+      }
+    }
 
-/* ── SKELETON CARDS (lightweight mode) ── */
-.skeleton-card{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:none;border:1px solid var(--border);flex:1 1 260px;max-width:320px;min-width:220px;}
-.skeleton-img{height:220px;background:linear-gradient(90deg,#f3f4f6 25%,#e5e7eb 50%,#f3f4f6 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
-.skeleton-line{height:14px;border-radius:4px;background:linear-gradient(90deg,#f3f4f6 25%,#e5e7eb 50%,#f3f4f6 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;margin:8px 16px;}
-.skeleton-line.short{width:50%;margin-top:16px;}
-@keyframes shimmer{to{background-position:-200% 0}}
+    /* ═══ TOP ANNOUNCEMENT BAR (laptop only) ═══ */
+    .top-bar {
+      background: linear-gradient(90deg, var(--accent-indigo), var(--accent-purple), var(--accent-pink));
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      font-size: .78rem;
+      color: #fff;
+      font-weight: 500;
+    }
 
-/* ── INFINITE SCROLL SENTINEL + LOAD MORE ── */
-#infiniteSentinel{height:1px;width:100%;}
-.load-more-wrap{text-align:center;padding:20px;max-width:1200px;margin:0 auto;}
-.load-more-btn{padding:12px 32px;border-radius:24px;border:2px solid var(--primary);color:var(--primary);background:#fff;font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif;}
-.load-more-btn:hover{background:var(--primary);color:#fff;}
-.load-more-spinner{display:flex;align-items:center;justify-content:center;gap:10px;color:var(--text2);font-size:.9rem;padding:20px;}
-.load-more-spinner .mini-spin{width:20px;height:20px;border:3px solid #dcfce7;border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite;}
+    .top-bar-center {
+      flex: 1;
+      text-align: center;
+      letter-spacing: .3px;
+    }
 
-/* ── PAGINATION (improved: Prev 1 2 3 … 10 Next) ── */
-.pagination{display:flex;justify-content:center;align-items:center;gap:6px;padding:24px 16px;flex-wrap:wrap;max-width:1200px;margin:0 auto;}
-.page-btn{min-width:38px;height:38px;padding:0 10px;border-radius:8px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:.875rem;font-weight:500;transition:.2s;font-family:'DM Sans',sans-serif;white-space:nowrap;}
-.page-btn:hover{border-color:var(--primary);color:var(--primary);}
-.page-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);}
-.page-btn:disabled{opacity:.38;cursor:not-allowed;}
-.page-btn.prev-next{padding:0 14px;display:flex;align-items:center;gap:5px;font-weight:600;}
-.page-ellipsis{display:flex;align-items:center;justify-content:center;width:32px;color:var(--text2);font-size:1rem;user-select:none;}
+    .top-bar-links {
+      display: flex;
+      gap: 16px;
+    }
 
-/* ── LOADING ── */
-.loading-wrap{text-align:center;padding:60px 24px;}
-.spinner{width:44px;height:44px;border:4px solid #dcfce7;border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 16px;}
-@keyframes spin{to{transform:rotate(360deg)}}
+    .top-bar-links a {
+      color: rgba(255, 255, 255, .85);
+      text-decoration: none;
+      cursor: pointer;
+      transition: .2s;
+    }
 
-/* ── WISHLIST PAGE ── */
-.page-header{padding:32px 24px 8px;max-width:1200px;margin:0 auto;}
-.page-header h2{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--text);}
-.page-header p{color:var(--text2);font-size:.9rem;margin-top:4px;}
-.empty-state{text-align:center;padding:80px 24px;}
-.empty-state .emoji{font-size:3.5rem;margin-bottom:16px;}
-.empty-state h3{font-size:1.3rem;font-weight:600;margin-bottom:8px;}
-.empty-state p{color:var(--text2);margin-bottom:24px;}
-.btn-outline{padding:11px 24px;border:2px solid var(--primary);color:var(--primary);border-radius:10px;background:#fff;font-size:.95rem;font-weight:600;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif;}
-.btn-outline:hover{background:var(--primary);color:#fff;}
+    .top-bar-links a:hover {
+      color: #fff;
+    }
 
-/* ── CART PAGE ── */
-.cart-layout{display:grid;grid-template-columns:1fr 340px;gap:24px;max-width:1200px;margin:0 auto;padding:24px;}
-@media(max-width:900px){.cart-layout{grid-template-columns:1fr;}}
-.cart-items{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
-.cart-item{display:flex;gap:16px;padding:20px;border-bottom:1px solid var(--border);align-items:center;}
-.cart-item:last-child{border-bottom:none;}
-.cart-item-img{width:80px;height:80px;object-fit:contain;border-radius:8px;background:#f9fafb;padding:6px;}
-.cart-item-info{flex:1;}
-.cart-item-title{font-size:.9rem;font-weight:600;line-height:1.4;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.cart-item-cat{font-size:.78rem;color:var(--text2);text-transform:capitalize;}
-.cart-item-price{font-size:1rem;font-weight:700;color:var(--primary);margin-top:4px;}
-.qty-control{display:flex;align-items:center;gap:8px;margin-top:8px;}
-.qty-btn{width:28px;height:28px;border-radius:6px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:.2s;}
-.qty-btn:hover{border-color:var(--primary);color:var(--primary);}
-.qty-val{font-weight:600;font-size:.95rem;min-width:20px;text-align:center;}
-.cart-remove{margin-left:auto;background:none;border:none;color:#ef4444;cursor:pointer;font-size:1.2rem;padding:4px;transition:.2s;}
-.cart-remove:hover{transform:scale(1.2);}
-.cart-summary{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;height:fit-content;position:sticky;top:80px;}
-.cart-summary h3{font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:20px;}
-.summary-row{display:flex;justify-content:space-between;font-size:.9rem;margin-bottom:12px;color:var(--text2);}
-.summary-row.total{font-size:1.1rem;font-weight:700;color:var(--text);border-top:1px solid var(--border);padding-top:12px;margin-top:4px;}
-.coupon-row{display:flex;gap:8px;margin:16px 0;}
-.coupon-row input{flex:1;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:.875rem;outline:none;font-family:'DM Sans',sans-serif;}
-.coupon-row input:focus{border-color:var(--primary);}
-.coupon-row button{padding:9px 14px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-family:'DM Sans',sans-serif;}
-.checkout-btn{width:100%;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:8px;transition:.2s;font-family:'DM Sans',sans-serif;}
-.checkout-btn:hover{background:var(--primary-dark);}
+    @media(max-width:600px) {
+      .top-bar {
+        display: none;
+      }
+    }
 
-/* ── CHECKOUT PAGE ── */
-.checkout-layout{display:grid;grid-template-columns:1fr 340px;gap:24px;max-width:1100px;margin:0 auto;padding:24px;}
-@media(max-width:900px){.checkout-layout{grid-template-columns:1fr;}}
-.checkout-form{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:28px;}
-.checkout-form h3{font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border);}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.form-grid .full{grid-column:1/-1;}
-.checkout-form label{display:block;font-size:.82rem;font-weight:500;margin-bottom:5px;color:var(--text);}
-.checkout-form input,.checkout-form select,.checkout-form textarea{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:.875rem;outline:none;font-family:'DM Sans',sans-serif;transition:.2s;}
-.checkout-form input:focus,.checkout-form select:focus{border-color:var(--primary);}
-.payment-methods{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
-.pay-method{flex:1;min-width:100px;padding:12px;border:2px solid var(--border);border-radius:10px;cursor:pointer;text-align:center;transition:.2s;font-size:.85rem;font-weight:500;}
-.pay-method:hover,.pay-method.active{border-color:var(--primary);background:#ecfdf5;color:var(--primary);}
-.pay-method .pm-icon{font-size:1.5rem;display:block;margin-bottom:4px;}
-.card-field-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
-.upi-section,.netbanking-section{padding:16px;background:#f9fafb;border-radius:10px;margin-top:8px;}
-.order-summary-mini{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;height:fit-content;position:sticky;top:80px;}
-.order-summary-mini h3{font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:16px;}
-.mini-item{display:flex;gap:12px;margin-bottom:14px;align-items:center;}
-.mini-item img{width:52px;height:52px;object-fit:contain;background:#f9fafb;border-radius:8px;padding:4px;}
-.mini-item-title{font-size:.82rem;font-weight:500;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.mini-item-price{font-size:.85rem;color:var(--primary);font-weight:700;margin-top:2px;}
-.place-order-btn{width:100%;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:16px;transition:.2s;font-family:'DM Sans',sans-serif;}
-.place-order-btn:hover{background:var(--primary-dark);}
+    /* ═══ MAIN NAVBAR ═══ */
+    .navbar {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 60%, #064e3b 100%);
+      height: var(--nav-h);
+      position: sticky;
+      top: 0;
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 14px;
+      box-shadow: 0 2px 16px rgba(22, 163, 74, .35);
+    }
 
-/* ── SUCCESS PAGE ── */
-.success-page{text-align:center;padding:80px 24px;}
-.success-icon{font-size:4rem;margin-bottom:16px;animation:pop .4s ease;}
-@keyframes pop{0%{transform:scale(0)}80%{transform:scale(1.15)}100%{transform:scale(1)}}
-.success-page h2{font-family:'Playfair Display',serif;font-size:1.8rem;margin-bottom:8px;}
-.success-page p{color:var(--text2);margin-bottom:8px;}
-.order-id{font-family:monospace;background:#ecfdf5;color:var(--primary);padding:4px 12px;border-radius:6px;font-weight:700;margin:8px 0 24px;display:inline-block;}
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      color: #fff;
+      font-size: 1.45rem;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      user-select: none;
+    }
 
-/* ── FOOTER ── */
-footer{background:#1f2937;color:#d1d5db;padding:40px 24px 20px;margin-top:48px;}
-.footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:32px;max-width:1200px;margin:0 auto 32px;}
-.footer-col h5{color:#f3f4f6;font-size:.95rem;margin-bottom:14px;}
-.footer-col p,.footer-col li{font-size:.85rem;line-height:1.7;}
-.footer-col ul{list-style:none;}
-.footer-col a{color:#93c5fd;text-decoration:none;transition:.2s;}
-.footer-col a:hover{color:#4ade80;}
-.footer-bottom{text-align:center;border-top:1px solid rgba(255,255,255,.1);padding-top:20px;font-size:.82rem;color:#6b7280;max-width:1200px;margin:0 auto;}
+    .nav-logo span {
+      color: #86efac;
+    }
 
-/* ── RESPONSIVE ── */
-@media(max-width:768px){
-  .navbar{padding:0 12px;gap:8px;}
-  .nav-search{max-width:180px;}
-  .nav-btn.ai-btn span:not(.badge){display:none;}
-  .nav-btn.ai-btn{padding:8px 10px;}
-  .cards-grid{padding:0 16px 24px;gap:14px;}
-  .cards-grid .card{flex:1 1 160px;min-width:150px;}
-  .card-img-wrap{height:160px;}
-  .cart-layout,.checkout-layout{padding:16px;}
-  .form-grid{grid-template-columns:1fr;}
-  .card-field-row{grid-template-columns:1fr;}
-  .filter-section{padding:16px;}
-  .sort-bar{padding:0 16px 12px;}
-}
-@media(max-width:480px){
-  .cards-grid .card{flex:1 1 140px;min-width:140px;}
-  .nav-btn span:not(.badge){display:none;}
-  .nav-btn.ai-btn{padding:8px 10px;}
-}
-/* ── CARD ENTRY ANIMATION ── */
-.card{animation:cardIn .3s ease both;}
-@keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-body.lightweight .card{animation:none;}
-</style>
+    .nav-search {
+      flex: 1;
+      max-width: 520px;
+      position: relative;
+      margin: 0 8px;
+    }
+
+    .nav-search input {
+      width: 100%;
+      padding: 9px 18px 9px 42px;
+      border-radius: 28px;
+      border: 2px solid rgba(255, 255, 255, .2);
+      outline: none;
+      font-size: .875rem;
+      background: rgba(255, 255, 255, .14);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      transition: .25s;
+    }
+
+    .nav-search input:focus {
+      background: rgba(255, 255, 255, .22);
+      border-color: rgba(255, 255, 255, .4);
+    }
+
+    .nav-search input::placeholder {
+      color: rgba(255, 255, 255, .65);
+    }
+
+    .nav-search .search-icon {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, .75);
+      font-size: 1rem;
+      pointer-events: none;
+    }
+
+    .nav-actions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, .14);
+      border: 1.5px solid rgba(255, 255, 255, .2);
+      color: #fff;
+      padding: 7px 13px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-size: .82rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: .2s;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, .26);
+    }
+
+    .nav-btn .badge {
+      background: var(--accent-rose);
+      color: #fff;
+      border-radius: 50%;
+      width: 17px;
+      height: 17px;
+      font-size: .65rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .nav-user {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255, 255, 255, .14);
+      padding: 6px 13px;
+      border-radius: 9px;
+      cursor: pointer;
+      border: 1.5px solid rgba(255, 255, 255, .2);
+      transition: .2s;
+    }
+
+    .nav-user:hover {
+      background: rgba(255, 255, 255, .24);
+    }
+
+    .nav-user-avatar {
+      width: 27px;
+      height: 27px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-amber), var(--accent-orange));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: .82rem;
+      color: #fff;
+    }
+
+    .nav-user-name {
+      color: #fff;
+      font-size: .82rem;
+      font-weight: 500;
+    }
+
+    .hamburger {
+      display: none;
+      background: rgba(255, 255, 255, .14);
+      border: 1.5px solid rgba(255, 255, 255, .22);
+      color: #fff;
+      width: 40px;
+      height: 40px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-size: 1.25rem;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: .2s;
+    }
+
+    .hamburger:hover {
+      background: rgba(255, 255, 255, .26);
+    }
+
+    /* ═══ CATEGORY NAV BAR (laptop) ═══ */
+    .cat-nav {
+      background: #fff;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 0 20px;
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: none;
+      position: sticky;
+      top: var(--nav-h);
+      z-index: 200;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, .05);
+    }
+
+    .cat-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cat-nav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 10px 13px;
+      font-size: .8rem;
+      font-weight: 500;
+      color: var(--text2);
+      cursor: pointer;
+      border-bottom: 2.5px solid transparent;
+      transition: .2s;
+      white-space: nowrap;
+    }
+
+    .cat-nav-link:hover {
+      color: var(--primary);
+      border-bottom-color: var(--primary-light);
+    }
+
+    .cat-nav-link.active {
+      color: var(--primary);
+      font-weight: 600;
+      border-bottom-color: var(--primary);
+    }
+
+    /* ═══ MOBILE DRAWER ═══ */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .5);
+      z-index: 400;
+      opacity: 0;
+      pointer-events: none;
+      transition: .3s;
+      backdrop-filter: blur(2px);
+    }
+
+    .drawer-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .mobile-drawer {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 290px;
+      background: #fff;
+      z-index: 450;
+      transform: translateX(-100%);
+      transition: .3s cubic-bezier(.4, 0, .2, 1);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      box-shadow: var(--shadow-xl);
+    }
+
+    .mobile-drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .drawer-close {
+      background: rgba(255, 255, 255, .2);
+      border: none;
+      color: #fff;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .drawer-search {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .drawer-search-wrap {
+      position: relative;
+    }
+
+    .drawer-search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text3);
+      font-size: .9rem;
+    }
+
+    .drawer-search input {
+      width: 100%;
+      padding: 9px 14px 9px 36px;
+      border-radius: 24px;
+      border: 1.5px solid var(--border2);
+      outline: none;
+      font-size: .875rem;
+      font-family: 'DM Sans', sans-serif;
+      background: #f8fafc;
+    }
+
+    .drawer-search input:focus {
+      border-color: var(--primary);
+    }
+
+    .drawer-sec-title {
+      font-size: .68rem;
+      font-weight: 700;
+      color: var(--text3);
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      padding: 12px 16px 5px;
+    }
+
+    .drawer-nav {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .drawer-nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 18px;
+      font-size: .875rem;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: .15s;
+      text-decoration: none;
+    }
+
+    .drawer-nav-link:hover {
+      background: #f0fdf4;
+      color: var(--primary);
+      border-left-color: var(--primary);
+    }
+
+    .drawer-nav-link .d-icon {
+      font-size: 1.1rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    .drawer-cats {
+      padding: 0 0 10px;
+    }
+
+    .drawer-cat-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 18px;
+      font-size: .83rem;
+      color: var(--text2);
+      cursor: pointer;
+      transition: .15s;
+      width: 100%;
+      background: none;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      text-align: left;
+    }
+
+    .drawer-cat-btn:hover {
+      color: var(--primary);
+      background: #f0fdf4;
+    }
+
+    .drawer-cat-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .drawer-user-sec {
+      margin-top: auto;
+      padding: 14px 16px;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .drawer-user-sec button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: .875rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      border: none;
+    }
+
+    /* ═══ PAGES ═══ */
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* ═══ AUTH MODAL ═══ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .55);
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      backdrop-filter: blur(6px);
+    }
+
+    .modal-overlay.hidden {
+      display: none;
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 22px;
+      padding: 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--shadow-xl);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: #f1f5f9;
+      border: none;
+      cursor: pointer;
+      color: var(--text2);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .modal-close:hover {
+      background: var(--accent-rose);
+      color: #fff;
+    }
+
+    .modal-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .modal-sub {
+      text-align: center;
+      color: var(--text2);
+      font-size: .875rem;
+      margin-bottom: 28px;
+    }
+
+    .auth-tabs {
+      display: flex;
+      border-radius: 11px;
+      overflow: hidden;
+      border: 1.5px solid var(--border);
+      margin-bottom: 28px;
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      font-size: .9rem;
+      font-weight: 500;
+      background: #fff;
+      border: none;
+      transition: .2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .auth-tab.active {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: .82rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: .875rem;
+      outline: none;
+      transition: .2s;
+      font-family: 'DM Sans', sans-serif;
+      background: #fafafa;
+    }
+
+    .form-group input:focus {
+      border-color: var(--primary);
+      background: #fff;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .btn-primary:hover {
+      opacity: .9;
+      transform: translateY(-1px);
+    }
+
+    .auth-switch {
+      text-align: center;
+      margin-top: 16px;
+      font-size: .85rem;
+      color: var(--text2);
+    }
+
+    .auth-switch a {
+      color: var(--primary);
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    /* ═══ HERO ═══ */
+    .hero {
+      background: linear-gradient(135deg, #ecfdf5, #d1fae5 50%, #a7f3d0);
+      padding: 36px 28px 28px;
+      text-align: center;
+      border-bottom: 1px solid #a7f3d0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -60px;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(134, 239, 172, .4), transparent 70%);
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      left: -40px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(99, 102, 241, .15), transparent 70%);
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      color: var(--text);
+      margin-bottom: 8px;
+      position: relative;
+    }
+
+    .hero h1 span {
+      color: var(--primary);
+    }
+
+    .hero p {
+      color: var(--text2);
+      font-size: 1rem;
+      position: relative;
+    }
+
+    .hero-badges {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      position: relative;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff;
+      border: 1.5px solid var(--border);
+      padding: 5px 13px;
+      border-radius: 20px;
+      font-size: .76rem;
+      font-weight: 500;
+      color: var(--text2);
+      box-shadow: var(--shadow);
+    }
+
+    /* ═══ FILTER ═══ */
+    .filter-section {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 18px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .filter-btn {
+      padding: 7px 15px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      font-size: .8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: .2s;
+      font-family: 'DM Sans', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: #f0fdf4;
+    }
+
+    .filter-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(22, 163, 74, .3);
+    }
+
+    .sort-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px 14px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .sort-bar select {
+      padding: 8px 13px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      font-size: .8rem;
+      outline: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+    }
+
+    .results-count {
+      font-size: .8rem;
+      color: var(--text2);
+      font-weight: 500;
+    }
+
+    .view-toggle-btn {
+      padding: 7px 13px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      font-size: .78rem;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      transition: .2s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--text);
+    }
+
+    .view-toggle-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .view-toggle-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    /* ═══ CARDS (Flexbox) ═══ */
+    .cards-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px 32px;
+      justify-content: flex-start;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: .3s cubic-bezier(.34, 1.2, .64, 1);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      flex: 1 1 230px;
+      min-width: 200px;
+      max-width: 285px;
+      border: 1.5px solid var(--border);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
+      border-color: var(--primary-light);
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: .68rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 20px;
+      z-index: 2;
+    }
+
+    .badge-top {
+      background: linear-gradient(135deg, var(--accent-amber), var(--accent-orange));
+      color: #fff;
+    }
+
+    .badge-disc {
+      background: linear-gradient(135deg, var(--accent-rose), #ff6b6b);
+      color: #fff;
+    }
+
+    .wishlist-btn {
+      position: absolute;
+      top: 9px;
+      right: 9px;
+      background: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--shadow-md);
+      font-size: .95rem;
+      transition: .2s;
+      z-index: 2;
+    }
+
+    .wishlist-btn:hover {
+      transform: scale(1.2);
+    }
+
+    .wishlist-btn.active {
+      color: var(--accent-rose);
+    }
+
+    .card-img-wrap {
+      height: 200px;
+      background: #f9fafb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .card-img-wrap img {
+      max-height: 175px;
+      max-width: 88%;
+      object-fit: contain;
+      transition: .4s;
+    }
+
+    .card:hover .card-img-wrap img {
+      transform: scale(1.07);
+    }
+
+    .card-body {
+      padding: 13px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .card-cat {
+      font-size: .68rem;
+      color: var(--text3);
+      padding: 2px 9px;
+      border-radius: 20px;
+      display: inline-block;
+      text-transform: capitalize;
+      font-weight: 500;
+      align-self: flex-start;
+      border: 1px solid transparent;
+    }
+
+    .card-brand {
+      font-size: .7rem;
+      color: var(--accent-blue);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+    }
+
+    .card-title {
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 2.4em;
+    }
+
+    .card-rating {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: .76rem;
+      color: var(--text2);
+    }
+
+    .stars {
+      color: var(--accent-amber);
+    }
+
+    .card-footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+      padding-top: 9px;
+      border-top: 1px solid var(--border);
+    }
+
+    .card-price {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .card-original {
+      font-size: .72rem;
+      color: var(--text3);
+      text-decoration: line-through;
+    }
+
+    .card-disc-tag {
+      font-size: .67rem;
+      color: var(--accent-rose);
+      font-weight: 600;
+      background: #fff1f2;
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    .add-cart-btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      border: none;
+      border-radius: 9px;
+      padding: 7px 11px;
+      font-size: .76rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .25s;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-family: 'DM Sans', sans-serif;
+      white-space: nowrap;
+    }
+
+    .add-cart-btn:hover {
+      opacity: .87;
+      transform: scale(1.04);
+    }
+
+    .add-cart-btn.in-cart {
+      background: var(--primary-xlight);
+      color: var(--primary);
+      border: 1.5px solid var(--primary);
+    }
+
+    /* ═══ PAGINATION ═══ */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      padding: 24px 16px;
+      flex-wrap: wrap;
+    }
+
+    .page-btn {
+      min-width: 36px;
+      height: 36px;
+      padding: 0 11px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      font-size: .8rem;
+      font-weight: 500;
+      transition: .2s;
+      font-family: 'DM Sans', sans-serif;
+      white-space: nowrap;
+      color: var(--text);
+    }
+
+    .page-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: #f0fdf4;
+    }
+
+    .page-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(22, 163, 74, .35);
+    }
+
+    .page-btn:disabled {
+      opacity: .35;
+      cursor: not-allowed;
+    }
+
+    .page-btn.prev-next {
+      padding: 0 14px;
+      font-weight: 600;
+      background: var(--bg3);
+    }
+
+    .page-btn.prev-next:not(:disabled):hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .page-ellipsis {
+      padding: 0 3px;
+      color: var(--text3);
+      line-height: 36px;
+    }
+
+    /* ═══ INFINITE SCROLL ═══ */
+    .scroll-sentinel {
+      height: 4px;
+      width: 100%;
+    }
+
+    .all-loaded-msg {
+      text-align: center;
+      padding: 20px;
+      font-size: .875rem;
+    }
+
+    .all-loaded-msg span {
+      background: var(--primary-xlight);
+      color: var(--primary);
+      padding: 8px 22px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    .loading-more {
+      text-align: center;
+      padding: 16px;
+      color: var(--text2);
+      font-size: .875rem;
+      display: none;
+    }
+
+    .loading-more.show {
+      display: block;
+    }
+
+    /* ═══ LOADING ═══ */
+    .loading-wrap {
+      text-align: center;
+      padding: 70px 24px;
+    }
+
+    .spinner {
+      width: 46px;
+      height: 46px;
+      border: 4px solid var(--primary-xlight);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    /* ═══ PAGE HEADER ═══ */
+    .page-header {
+      padding: 32px 24px 8px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .page-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: var(--text);
+    }
+
+    .page-header p {
+      color: var(--text2);
+      font-size: .875rem;
+      margin-top: 4px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 80px 24px;
+    }
+
+    .empty-state .emoji {
+      font-size: 3.5rem;
+      margin-bottom: 16px;
+    }
+
+    .empty-state h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .empty-state p {
+      color: var(--text2);
+      margin-bottom: 24px;
+    }
+
+    .btn-outline {
+      padding: 11px 24px;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      border-radius: 10px;
+      background: #fff;
+      font-size: .9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .btn-outline:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    /* ═══ CART ═══ */
+    .cart-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 22px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 24px;
+    }
+
+    @media(max-width:900px) {
+      .cart-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .cart-items {
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border: 1.5px solid var(--border);
+    }
+
+    .cart-item {
+      display: flex;
+      gap: 14px;
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .cart-item-img {
+      width: 76px;
+      height: 76px;
+      object-fit: contain;
+      border-radius: 10px;
+      background: #f9fafb;
+      padding: 6px;
+      border: 1px solid var(--border);
+    }
+
+    .cart-item-info {
+      flex: 1;
+    }
+
+    .cart-item-title {
+      font-size: .875rem;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 3px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .cart-item-cat {
+      font-size: .75rem;
+      color: var(--text2);
+      text-transform: capitalize;
+    }
+
+    .cart-item-price {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-top: 4px;
+    }
+
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .qty-btn {
+      width: 27px;
+      height: 27px;
+      border-radius: 6px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      font-size: .95rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: .2s;
+    }
+
+    .qty-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .qty-val {
+      font-weight: 600;
+      font-size: .9rem;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .cart-remove {
+      margin-left: auto;
+      background: #fff1f2;
+      border: none;
+      color: var(--accent-rose);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 7px;
+      border-radius: 8px;
+      transition: .2s;
+    }
+
+    .cart-remove:hover {
+      background: var(--accent-rose);
+      color: #fff;
+    }
+
+    .cart-summary {
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      height: fit-content;
+      position: sticky;
+      top: calc(var(--nav-h) + 46px);
+      border: 1.5px solid var(--border);
+    }
+
+    .cart-summary h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      margin-bottom: 18px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: .875rem;
+      margin-bottom: 11px;
+      color: var(--text2);
+    }
+
+    .summary-row.total {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      border-top: 1.5px solid var(--border);
+      padding-top: 11px;
+      margin-top: 4px;
+    }
+
+    .coupon-row {
+      display: flex;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .coupon-row input {
+      flex: 1;
+      padding: 9px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: .8rem;
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .coupon-row input:focus {
+      border-color: var(--primary);
+    }
+
+    .coupon-row button {
+      padding: 9px 13px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: .95rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: .2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .checkout-btn:hover {
+      opacity: .9;
+      transform: translateY(-1px);
+    }
+
+    /* ═══ CHECKOUT ═══ */
+    .checkout-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 22px;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px 24px;
+    }
+
+    @media(max-width:900px) {
+      .checkout-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .checkout-form {
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 26px;
+      border: 1.5px solid var(--border);
+    }
+
+    .checkout-form h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1.5px solid var(--border);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-grid .full {
+      grid-column: 1/-1;
+    }
+
+    .checkout-form label {
+      display: block;
+      font-size: .78rem;
+      font-weight: 500;
+      margin-bottom: 5px;
+      color: var(--text);
+    }
+
+    .checkout-form input,
+    .checkout-form select,
+    .checkout-form textarea {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: .82rem;
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+      transition: .2s;
+      background: #fafafa;
+    }
+
+    .checkout-form input:focus,
+    .checkout-form select:focus {
+      border-color: var(--primary);
+      background: #fff;
+    }
+
+    .payment-methods {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .pay-method {
+      flex: 1;
+      min-width: 88px;
+      padding: 11px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: center;
+      transition: .2s;
+      font-size: .8rem;
+      font-weight: 500;
+      background: #fafafa;
+    }
+
+    .pay-method:hover,
+    .pay-method.active {
+      border-color: var(--primary);
+      background: #ecfdf5;
+      color: var(--primary);
+    }
+
+    .pay-method .pm-icon {
+      font-size: 1.4rem;
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .card-field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .upi-section,
+    .netbanking-section {
+      padding: 14px;
+      background: #f9fafb;
+      border-radius: 10px;
+      margin-top: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .order-summary-mini {
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      height: fit-content;
+      position: sticky;
+      top: calc(var(--nav-h) + 46px);
+      border: 1.5px solid var(--border);
+    }
+
+    .order-summary-mini h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      margin-bottom: 14px;
+    }
+
+    .mini-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 13px;
+      align-items: center;
+    }
+
+    .mini-item img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      background: #f9fafb;
+      border-radius: 8px;
+      padding: 4px;
+      border: 1px solid var(--border);
+    }
+
+    .mini-item-title {
+      font-size: .78rem;
+      font-weight: 500;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .mini-item-price {
+      font-size: .82rem;
+      color: var(--primary);
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .place-order-btn {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: .95rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 14px;
+      transition: .2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .place-order-btn:hover {
+      opacity: .9;
+    }
+
+    /* ═══ SUCCESS ═══ */
+    .success-page {
+      text-align: center;
+      padding: 80px 24px;
+    }
+
+    .success-icon {
+      font-size: 4.5rem;
+      margin-bottom: 16px;
+      animation: pop .4s ease;
+    }
+
+    @keyframes pop {
+      0% {
+        transform: scale(0)
+      }
+
+      80% {
+        transform: scale(1.15)
+      }
+
+      100% {
+        transform: scale(1)
+      }
+    }
+
+    .success-page h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      margin-bottom: 8px;
+    }
+
+    .success-page p {
+      color: var(--text2);
+      margin-bottom: 8px;
+    }
+
+    .order-id {
+      font-family: monospace;
+      background: #ecfdf5;
+      color: var(--primary);
+      padding: 5px 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      margin: 8px 0 24px;
+      display: inline-block;
+      border: 1.5px solid #a7f3d0;
+    }
+
+    /* ═══ FOOTER ═══ */
+    footer {
+      background: #0f172a;
+      color: #94a3b8;
+      padding: 48px 24px 20px;
+      margin-top: 56px;
+    }
+
+    .footer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+    }
+
+    .footer-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: #f1f5f9;
+      font-weight: 700;
+    }
+
+    .footer-brand span {
+      color: #86efac;
+    }
+
+    .footer-tagline {
+      font-size: .78rem;
+      color: #64748b;
+      margin-top: 3px;
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .social-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 13px;
+      border-radius: 20px;
+      font-size: .76rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: .2s;
+      border: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    .social-pill:hover {
+      transform: translateY(-2px);
+    }
+
+    .pill-yt {
+      background: rgba(239, 68, 68, .15);
+      color: #fca5a5;
+    }
+
+    .pill-ig {
+      background: rgba(236, 72, 153, .15);
+      color: #f9a8d4;
+    }
+
+    .pill-port {
+      background: rgba(99, 102, 241, .15);
+      color: #a5b4fc;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 28px;
+      max-width: 1200px;
+      margin: 0 auto 28px;
+    }
+
+    .footer-col h5 {
+      color: #e2e8f0;
+      font-size: .875rem;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col li,
+    .footer-col p {
+      font-size: .8rem;
+      line-height: 1.9;
+    }
+
+    .footer-col a {
+      color: #64748b;
+      text-decoration: none;
+      transition: .2s;
+    }
+
+    .footer-col a:hover {
+      color: #86efac;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, .07);
+      padding-top: 18px;
+      font-size: .78rem;
+      color: #475569;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ═══ GEMINI FAB ═══ */
+    .gemini-fab {
+      position: fixed;
+      bottom: 88px;
+      right: 22px;
+      z-index: 9998;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .gemini-btn {
+      background: linear-gradient(135deg, #4285f4, #ea4335, #fbbc04, #34a853);
+      background-size: 300% 300%;
+      animation: gemShift 4s ease infinite;
+      border: none;
+      color: #fff;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, .22);
+      transition: .2s;
+    }
+
+    .gemini-btn:hover {
+      transform: scale(1.12);
+      box-shadow: 0 6px 26px rgba(0, 0, 0, .3);
+    }
+
+    @keyframes gemShift {
+      0% {
+        background-position: 0% 50%
+      }
+
+      50% {
+        background-position: 100% 50%
+      }
+
+      100% {
+        background-position: 0% 50%
+      }
+    }
+
+    .gemini-label {
+      background: #fff;
+      color: var(--text);
+      font-size: .74rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      box-shadow: var(--shadow-md);
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateX(10px);
+      transition: .2s;
+      border: 1px solid var(--border);
+    }
+
+    .gemini-fab:hover .gemini-label {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* ═══ RESPONSIVE ═══ */
+    @media(max-width:1024px) {
+      .cards-grid {
+        gap: 14px;
+      }
+
+      .card {
+        flex: 1 1 200px;
+      }
+    }
+
+    @media(max-width:768px) {
+      .hamburger {
+        display: flex;
+      }
+
+      .nav-search {
+        display: none;
+      }
+
+      .nav-actions .nav-btn span:not(.badge) {
+        display: none;
+      }
+
+      .cards-grid {
+        gap: 12px;
+        padding: 0 12px 24px;
+      }
+
+      .card {
+        flex: 1 1 155px;
+        min-width: 148px;
+        max-width: none;
+      }
+
+      .card-img-wrap {
+        height: 155px;
+      }
+
+      .cart-layout,
+      .checkout-layout {
+        padding: 14px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card-field-row {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        font-size: 1.9rem;
+      }
+
+      .sort-bar {
+        padding: 0 12px 12px;
+      }
+    }
+
+    @media(max-width:480px) {
+      .cards-grid {
+        gap: 10px;
+        padding: 0 10px 20px;
+      }
+
+      .card {
+        flex: 1 1 calc(50% - 10px);
+        min-width: 138px;
+      }
+
+      .gemini-fab {
+        bottom: 76px;
+        right: 14px;
+      }
+
+      .gemini-btn {
+        width: 46px;
+        height: 46px;
+      }
+
+      .hero h1 {
+        font-size: 1.55rem;
+      }
+    }
+
+    @media(min-width:769px) {
+
+      .mobile-drawer,
+      .drawer-overlay {
+        display: none !important;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- NETWORK BADGE -->
-<div id="networkBadge"></div>
-
-<!-- NAVBAR -->
-<nav class="navbar">
-  <div class="nav-logo" onclick="showPage('home')">Apna <span>Store</span></div>
-  <div class="nav-search">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="searchInput" placeholder="Search products..." oninput="handleSearch()">
-  </div>
-  <div class="nav-actions">
-    <a href="https://gemini.google.com/" target="_blank" rel="noopener" class="nav-btn ai-btn" title="Ask Gemini AI">✨ <span>Ask AI</span></a>
-    <button class="nav-btn" onclick="showPage('wishlist')">❤️ <span>Wishlist</span><span class="badge" id="wishBadge">0</span></button>
-    <button class="nav-btn" onclick="showPage('cart')">🛒 <span>Cart</span><span class="badge" id="cartBadge">0</span></button>
-    <div id="navUserWrap"></div>
-  </div>
-</nav>
-
-<!-- AUTH MODAL -->
-<div class="modal-overlay hidden" id="authModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeAuth()">✕</button>
-    <div class="modal-logo">Apna Store</div>
-    <p class="modal-sub">Sign in to your account</p>
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="loginTab" onclick="switchAuthTab('login')">Login</button>
-      <button class="auth-tab" id="signupTab" onclick="switchAuthTab('signup')">Sign Up</button>
-    </div>
-    <div id="loginForm">
-      <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="you@example.com"></div>
-      <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="••••••••"></div>
-      <button class="btn-primary" onclick="doLogin()">Login</button>
-      <p class="auth-switch">Don't have an account? <a onclick="switchAuthTab('signup')">Sign up</a></p>
-    </div>
-    <div id="signupForm" style="display:none">
-      <div class="form-group"><label>Full Name</label><input type="text" id="signupName" placeholder="Nikhil Nigam"></div>
-      <div class="form-group"><label>Email</label><input type="email" id="signupEmail" placeholder="you@example.com"></div>
-      <div class="form-group"><label>Password</label><input type="password" id="signupPass" placeholder="Min 6 characters"></div>
-      <button class="btn-primary" onclick="doSignup()">Create Account</button>
-      <p class="auth-switch">Already have an account? <a onclick="switchAuthTab('login')">Login</a></p>
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <span style="opacity:.8;font-size:.74rem;">🌐 IN</span>
+    <div class="top-bar-center">🎉 Free shipping above ₹2,000 · Use code <strong>APNA20</strong> for 20% off</div>
+    <div class="top-bar-links">
+      <a>Track Order</a>
+      <a>Help</a>
+      <a href="https://gemini.google.com/" target="_blank">✦ Gemini AI</a>
     </div>
   </div>
-</div>
 
-<!-- TOAST -->
-<div id="toast-container"></div>
-
-<!-- ===== HOME PAGE ===== -->
-<div class="page active" id="page-home">
-  <div class="hero">
-    <h1>Welcome to <span>Apna Store</span></h1>
-    <p>Your trusted online marketplace — shop the best products at great prices</p>
-  </div>
-  <div class="filter-section" id="filterSection"></div>
-  <div class="sort-bar">
-    <span class="results-count" id="resultsCount"></span>
-    <div class="sort-bar-right">
-      <select id="sortSelect" onchange="applySortFilter()">
-        <option value="default">Sort: Default</option>
-        <option value="price-asc">Price: Low to High</option>
-        <option value="price-desc">Price: High to Low</option>
-        <option value="rating">Top Rated</option>
-        <option value="name">Name: A–Z</option>
-      </select>
-      <button class="scroll-toggle" id="scrollToggleBtn" onclick="toggleScrollMode()" title="Switch scroll mode">
-        <span class="dot"></span>
-        <span id="scrollToggleLabel">Infinite Scroll</span>
-      </button>
+  <!-- MAIN NAVBAR -->
+  <nav class="navbar">
+    <button class="hamburger" id="hamburger" onclick="toggleDrawer()">☰</button>
+    <div class="nav-logo" onclick="showPage('home')">Apna <span>Store</span></div>
+    <div class="nav-search">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search products, brands, categories…" oninput="handleSearch()">
     </div>
-  </div>
-  <div id="loadingWrap" class="loading-wrap"><div class="spinner"></div><p style="color:var(--text2)">Loading products...</p></div>
-  <div id="cards" class="cards-grid" style="display:none"></div>
-  <div id="noResults" class="empty-state" style="display:none">
-    <div class="emoji">🔍</div><h3>No products found</h3><p>Try a different search or category.</p>
-  </div>
-  <!-- Infinite scroll trigger sentinel -->
-  <div id="infiniteSentinel"></div>
-  <!-- Load-more area for infinite scroll -->
-  <div class="load-more-wrap" id="loadMoreWrap" style="display:none">
-    <div class="load-more-spinner" id="loadMoreSpinner" style="display:none">
-      <div class="mini-spin"></div><span>Loading more...</span>
+    <div class="nav-actions">
+      <button class="nav-btn" onclick="showPage('wishlist')">❤️ <span>Wishlist</span><span class="badge"
+          id="wishBadge">0</span></button>
+      <button class="nav-btn" onclick="showPage('cart')">🛒 <span>Cart</span><span class="badge"
+          id="cartBadge">0</span></button>
+      <div id="navUserWrap"></div>
     </div>
-    <button class="load-more-btn" id="loadMoreBtn" onclick="loadMoreProducts()" style="display:none">Load More Products</button>
+  </nav>
+
+  <!-- LAPTOP CATEGORY NAV -->
+  <div class="cat-nav" id="catNavBar">
+    <span class="cat-nav-link active" data-filter="all" onclick="setFilterCat('all')">🛍️ All</span>
   </div>
-  <!-- Pagination (shown when infinite scroll is OFF) -->
-  <div class="pagination" id="pagination"></div>
-</div>
 
-<!-- ===== WISHLIST PAGE ===== -->
-<div class="page" id="page-wishlist">
-  <div class="page-header"><h2>❤️ My Wishlist</h2><p id="wishSubtitle"></p></div>
-  <div id="wishlistContent" class="cards-grid" style="padding-top:16px;max-width:1200px;margin:0 auto;padding:16px 24px 32px;"></div>
-</div>
+  <!-- DRAWER OVERLAY -->
+  <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
 
-<!-- ===== CART PAGE ===== -->
-<div class="page" id="page-cart">
-  <div class="page-header"><h2>🛒 Shopping Cart</h2><p id="cartSubtitle"></p></div>
-  <div class="cart-layout" id="cartLayout"></div>
-</div>
-
-<!-- ===== CHECKOUT PAGE ===== -->
-<div class="page" id="page-checkout">
-  <div class="page-header"><h2>📦 Checkout</h2><p>Almost there! Complete your order</p></div>
-  <div class="checkout-layout">
-    <div>
-      <div class="checkout-form" style="margin-bottom:20px;">
-        <h3>🏠 Shipping Address</h3>
-        <div class="form-grid">
-          <div><label>First Name</label><input type="text" id="ck-fname" placeholder="Nikhil"></div>
-          <div><label>Last Name</label><input type="text" id="ck-lname" placeholder="Nigam"></div>
-          <div class="full"><label>Email</label><input type="email" id="ck-email" placeholder="Apna@email.com"></div>
-          <div class="full"><label>Phone</label><input type="tel" id="ck-phone" placeholder="+91 ##### #####"></div>
-          <div class="full"><label>Address Line 1</label><input type="text" id="ck-addr1" placeholder="House No, Street"></div>
-          <div class="full"><label>Address Line 2 (optional)</label><input type="text" id="ck-addr2" placeholder="Locality, Area"></div>
-          <div><label>City</label><input type="text" id="ck-city" placeholder="Kanpur"></div>
-          <div><label>State</label>
-            <select id="ck-state">
-              <option>Uttar Pradesh</option><option>Maharashtra</option><option>Delhi</option><option>Karnataka</option><option>Tamil Nadu</option><option>Gujarat</option><option>Rajasthan</option><option>West Bengal</option>
-            </select>
-          </div>
-          <div><label>PIN Code</label><input type="text" id="ck-pin" placeholder="208001" maxlength="6"></div>
-          <div><label>Country</label><input type="text" value="India" readonly style="background:#f9fafb;"></div>
-        </div>
+  <!-- MOBILE DRAWER -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <div class="drawer-header">
+      <div class="nav-logo" style="font-size:1.2rem;">Apna <span>Store</span></div>
+      <button class="drawer-close" onclick="toggleDrawer()">✕</button>
+    </div>
+    <div class="drawer-search">
+      <div class="drawer-search-wrap">
+        <span class="drawer-search-icon">🔍</span>
+        <input type="text" id="drawerSearch" placeholder="Search products…" oninput="syncDrawerSearch()">
       </div>
-      <div class="checkout-form">
-        <h3>💳 Payment Method</h3>
-        <div class="payment-methods">
-          <div class="pay-method active" onclick="selectPayment('card')" id="pm-card"><span class="pm-icon">💳</span>Card</div>
-          <div class="pay-method" onclick="selectPayment('upi')" id="pm-upi"><span class="pm-icon">📱</span>UPI</div>
-          <div class="pay-method" onclick="selectPayment('netbanking')" id="pm-netbanking"><span class="pm-icon">🏦</span>Net Banking</div>
-          <div class="pay-method" onclick="selectPayment('cod')" id="pm-cod"><span class="pm-icon">💵</span>COD</div>
+    </div>
+    <div class="drawer-sec-title">Navigate</div>
+    <nav class="drawer-nav">
+      <span class="drawer-nav-link" onclick="showPage('home');toggleDrawer()"><span class="d-icon">🏠</span>Home</span>
+      <span class="drawer-nav-link" onclick="showPage('wishlist');toggleDrawer()"><span class="d-icon">❤️</span>My
+        Wishlist <span id="drawerWishCount"
+          style="background:var(--accent-rose);color:#fff;border-radius:20px;padding:1px 7px;font-size:.7rem;margin-left:auto;"></span></span>
+      <span class="drawer-nav-link" onclick="showPage('cart');toggleDrawer()"><span class="d-icon">🛒</span>Cart <span
+          id="drawerCartCount"
+          style="background:var(--primary);color:#fff;border-radius:20px;padding:1px 7px;font-size:.7rem;margin-left:auto;"></span></span>
+      <a class="drawer-nav-link" href="https://gemini.google.com/" target="_blank"><span class="d-icon">✦</span>Ask
+        Gemini AI</a>
+    </nav>
+    <div class="drawer-sec-title">Categories</div>
+    <div class="drawer-cats" id="drawerCats"></div>
+    <div class="drawer-user-sec" id="drawerUserSec"></div>
+  </div>
+
+  <!-- AUTH MODAL -->
+  <div class="modal-overlay hidden" id="authModal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeAuth()">✕</button>
+      <div class="modal-logo">Apna Store</div>
+      <p class="modal-sub">Sign in to your account</p>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="loginTab" onclick="switchAuthTab('login')">Login</button>
+        <button class="auth-tab" id="signupTab" onclick="switchAuthTab('signup')">Sign Up</button>
+      </div>
+      <div id="loginForm">
+        <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="you@example.com">
         </div>
-        <div id="pay-card-fields">
-          <div class="form-group full"><label>Cardholder Name</label><input type="text" id="ck-cardname" placeholder="NIKHIL NIGAM"></div>
-          <div class="form-group full"><label>Card Number</label><input type="text" id="ck-cardno" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)"></div>
-          <div class="card-field-row">
-            <div><label>Expiry Month</label><input type="text" placeholder="MM" maxlength="2"></div>
-            <div><label>Expiry Year</label><input type="text" placeholder="YY" maxlength="2"></div>
-            <div><label>CVV</label><input type="password" placeholder="•••" maxlength="3"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="••••••••">
+        </div>
+        <button class="btn-primary" onclick="doLogin()">Login</button>
+        <p class="auth-switch">No account? <a onclick="switchAuthTab('signup')">Sign up</a></p>
+      </div>
+      <div id="signupForm" style="display:none">
+        <div class="form-group"><label>Full Name</label><input type="text" id="signupName" placeholder="Nikhil Nigam">
+        </div>
+        <div class="form-group"><label>Email</label><input type="email" id="signupEmail" placeholder="example@com.com">
+        </div>
+        <div class="form-group"><label>Password</label><input type="password" id="signupPass"
+            placeholder="Min 6 characters"></div>
+        <button class="btn-primary" onclick="doSignup()">Create Account</button>
+        <p class="auth-switch">Have an account? <a onclick="switchAuthTab('login')">Login</a></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <!-- HOME PAGE -->
+  <div class="page active" id="page-home">
+    <div class="hero">
+      <h1>Welcome to <span>Apna Store</span></h1>
+      <p>Your trusted online marketplace — shop the best products at great prices</p>
+      <div class="hero-badges">
+        <span class="hero-badge">🚚 Free Delivery ₹2K+</span>
+        <span class="hero-badge">↩️ Easy Returns</span>
+        <span class="hero-badge">🔒 Secure Pay</span>
+
+      </div>
+    </div>
+    <div class="filter-section" id="filterSection"></div>
+    <div class="sort-bar">
+      <span class="results-count" id="resultsCount"></span>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <button class="view-toggle-btn active" id="viewToggleBtn" onclick="toggleViewMode()">🔄 Infinite Scroll</button>
+        <select id="sortSelect" onchange="applySortFilter()">
+          <option value="default">Sort: Default</option>
+          <option value="price-asc">Price: Low → High</option>
+          <option value="price-desc">Price: High → Low</option>
+          <option value="rating">Top Rated</option>
+          <option value="discount">Best Discount</option>
+          <option value="name">Name: A–Z</option>
+        </select>
+      </div>
+    </div>
+    <div id="loadingWrap" class="loading-wrap">
+      <div class="spinner"></div>
+      <p style="color:var(--text2)">Fetching from DummyJSON…</p>
+    </div>
+    <div id="cards" class="cards-grid" style="display:none"></div>
+    <div id="noResults" class="empty-state" style="display:none">
+      <div class="emoji">🔍</div>
+      <h3>No products found</h3>
+      <p>Try a different search or category.</p>
+    </div>
+    <div class="pagination" id="pagination"></div>
+    <div class="scroll-sentinel" id="scrollSentinel" style="display:none"></div>
+    <div class="all-loaded-msg" id="allLoadedMsg" style="display:none"><span>✅ All products loaded</span></div>
+    <div class="loading-more" id="loadingMore">⏳ Loading more…</div>
+  </div>
+
+  <!-- WISHLIST PAGE -->
+  <div class="page" id="page-wishlist">
+    <div class="page-header">
+      <h2>❤️ My Wishlist</h2>
+      <p id="wishSubtitle"></p>
+    </div>
+    <div id="wishlistContent" class="cards-grid"></div>
+  </div>
+
+  <!-- CART PAGE -->
+  <div class="page" id="page-cart">
+    <div class="page-header">
+      <h2>🛒 Shopping Cart</h2>
+      <p id="cartSubtitle"></p>
+    </div>
+    <div class="cart-layout" id="cartLayout"></div>
+  </div>
+
+  <!-- CHECKOUT PAGE -->
+  <div class="page" id="page-checkout">
+    <div class="page-header">
+      <h2>📦 Checkout</h2>
+      <p>Almost there! Complete your order</p>
+    </div>
+    <div class="checkout-layout">
+      <div>
+        <div class="checkout-form" style="margin-bottom:18px;">
+          <h3>🏠 Shipping Address</h3>
+          <div class="form-grid">
+            <div><label>First Name</label><input type="text" id="ck-fname" placeholder="Nikhil"></div>
+            <div><label>Last Name</label><input type="text" id="ck-lname" placeholder="Nigam"></div>
+            <div class="full"><label>Email</label><input type="email" id="ck-email" placeholder="you@email.com"></div>
+            <div class="full"><label>Phone</label><input type="tel" id="ck-phone" placeholder="+91 98765 43210"></div>
+            <div class="full"><label>Address Line 1</label><input type="text" id="ck-addr1"
+                placeholder="House No, Street"></div>
+            <div class="full"><label>Address Line 2</label><input type="text" id="ck-addr2"
+                placeholder="Locality, Area"></div>
+            <div><label>City</label><input type="text" id="ck-city" placeholder="Kanpur"></div>
+            <div><label>State</label><select id="ck-state">
+                <option>Uttar Pradesh</option>
+                <option>Maharashtra</option>
+                <option>Delhi</option>
+                <option>Karnataka</option>
+                <option>Tamil Nadu</option>
+                <option>Gujarat</option>
+                <option>Rajasthan</option>
+                <option>West Bengal</option>
+              </select></div>
+            <div><label>PIN Code</label><input type="text" id="ck-pin" placeholder="208001" maxlength="6"></div>
+            <div><label>Country</label><input value="India" readonly style="background:#f1f5f9;"></div>
           </div>
         </div>
-        <div id="pay-upi-fields" style="display:none">
-          <div class="upi-section">
-            <div class="form-group"><label>UPI ID</label><input type="text" id="ck-upi" placeholder="yourname@upi"></div>
-            <p style="font-size:.8rem;color:var(--text2);">Enter your UPI ID (e.g., name@gpay, name@paytm, name@ybl)</p>
+        <div class="checkout-form">
+          <h3>💳 Payment Method</h3>
+          <div class="payment-methods">
+            <div class="pay-method active" onclick="selectPayment('card')" id="pm-card"><span
+                class="pm-icon">💳</span>Card</div>
+            <div class="pay-method" onclick="selectPayment('upi')" id="pm-upi"><span class="pm-icon">📱</span>UPI</div>
+            <div class="pay-method" onclick="selectPayment('netbanking')" id="pm-netbanking"><span
+                class="pm-icon">🏦</span>Net Banking</div>
+            <div class="pay-method" onclick="selectPayment('cod')" id="pm-cod"><span class="pm-icon">💵</span>COD</div>
           </div>
-        </div>
-        <div id="pay-nb-fields" style="display:none">
-          <div class="netbanking-section">
-            <div class="form-group"><label>Select Bank</label>
-              <select><option>State Bank of India</option><option>HDFC Bank</option><option>ICICI Bank</option><option>Axis Bank</option><option>Kotak Mahindra</option><option>Punjab National Bank</option><option>Bank of Baroda</option></select>
+          <div id="pay-card-fields">
+            <div class="form-group full"><label>Cardholder Name</label><input type="text" id="ck-cardname"
+                placeholder="NIKHIL NIGAM"></div>
+            <div class="form-group full"><label>Card Number</label><input type="text" id="ck-cardno"
+                placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)"></div>
+            <div class="card-field-row">
+              <div><label>Month</label><input placeholder="MM" maxlength="2"></div>
+              <div><label>Year</label><input placeholder="YY" maxlength="2"></div>
+              <div><label>CVV</label><input type="password" placeholder="•••" maxlength="3"></div>
+            </div>
+          </div>
+          <div id="pay-upi-fields" style="display:none">
+            <div class="upi-section">
+              <div class="form-group"><label>UPI ID</label><input type="text" id="ck-upi" placeholder="name@gpay"></div>
+              <p style="font-size:.76rem;color:var(--text2)">E.g. name@paytm, name@ybl</p>
+            </div>
+          </div>
+          <div id="pay-nb-fields" style="display:none">
+            <div class="netbanking-section">
+              <div class="form-group"><label>Select Bank</label><select>
+                  <option>State Bank of India</option>
+                  <option>HDFC Bank</option>
+                  <option>ICICI Bank</option>
+                  <option>Axis Bank</option>
+                  <option>Kotak Mahindra</option>
+                </select></div>
+            </div>
+          </div>
+          <div id="pay-cod-fields" style="display:none">
+            <div class="upi-section">
+              <p style="font-size:.875rem;color:var(--text2)">💵 Pay cash on delivery. Extra ₹40 COD charge.</p>
             </div>
           </div>
         </div>
-        <div id="pay-cod-fields" style="display:none">
-          <div class="upi-section">
-            <p style="font-size:.9rem;color:var(--text2);">💵 Pay in cash when your order is delivered. Extra ₹40 COD charge applies.</p>
-          </div>
-        </div>
+      </div>
+      <div class="order-summary-mini" id="checkoutSummary"></div>
+    </div>
+  </div>
+
+  <!-- SUCCESS PAGE -->
+  <div class="page" id="page-success">
+    <div class="success-page">
+      <div class="success-icon">🎉</div>
+      <h2>Order Placed Successfully!</h2>
+      <p>Thank you for shopping at Apna Store</p>
+      <div class="order-id" id="orderId">ORD-XXXXXXXX</div>
+      <p style="color:var(--text2);margin-bottom:24px;">Confirmation sent to your email shortly.</p>
+      <button class="btn-primary" style="max-width:200px;margin:0 auto" onclick="showPage('home')">Continue
+        Shopping</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">Apna <span>Store</span></div>
+        <div class="footer-tagline">Learning project · Built with ❤️ · Started 08-04-2026</div>
+      </div>
+      <div class="footer-socials">
+        <a class="social-pill pill-port" href="https://nikhilnigam0406.github.io/nikhil_nigam/" target="_blank">📄
+          Portfolio</a>
+        <a class="social-pill pill-yt" href="https://www.youtube.com/@nigamGvlog" target="_blank">▶️ YouTube</a>
+        <a class="social-pill pill-ig" href="https://www.instagram.com/nikhil__nigam0406/" target="_blank">📸
+          Instagram</a>
       </div>
     </div>
-    <div class="order-summary-mini" id="checkoutSummary"></div>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h5>About</h5>
+        <p>Your trusted online marketplace. Learning project started 08-04-2026.</p>
+        <p style="margin-top:8px">📍 Kanpur Nagar, India</p>
+      </div>
+      <div class="footer-col">
+        <h5>Quick Links</h5>
+        <ul>
+          <li><a onclick="showPage('home')">🏠 Home</a></li>
+          <li><a onclick="showPage('wishlist')">❤️ Wishlist</a></li>
+          <li><a onclick="showPage('cart')">🛒 Cart</a></li>
+          <li><a href="https://gemini.google.com/" target="_blank">✦ Gemini AI</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <p>✉️ <a href="mailto:nikhilnigam2001@gmail.com">nikhilnigam2001@gmail.com</a></p>
+        <p style="margin-top:6px">🔐 Password on request</p>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026–2036 ApnaStore · All rights reserved - Nigam· Built with ❤️ for learning</div>
+  </footer>
+
+  <!-- GEMINI FAB -->
+  <div class="gemini-fab">
+    <span class="gemini-label">✨ Ask Gemini AI</span>
+    <button class="gemini-btn" onclick="window.open('https://gemini.google.com/','_blank')" title="Gemini AI">✦</button>
   </div>
-</div>
 
-<!-- ===== SUCCESS PAGE ===== -->
-<div class="page" id="page-success">
-  <div class="success-page">
-    <div class="success-icon">🎉</div>
-    <h2>Order Placed Successfully!</h2>
-    <p>Thank you for shopping at Apna Store</p>
-    <div class="order-id" id="orderId">ORD-XXXXXXXX</div>
-    <p style="color:var(--text2);margin-bottom:24px;">You'll receive a confirmation on your email shortly.</p>
-    <button class="btn-primary" style="max-width:200px;margin:0 auto" onclick="showPage('home')">Continue Shopping</button>
-  </div>
-</div>
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-grid">
-    <div class="footer-col">
-      <h5>Apna Store</h5>
-      <p>Your trusted online marketplace. Learning project started 08-04-2026.</p>
-      <p style="margin-top:8px;">📍 Kanpur Nagar, India</p>
-    </div>
-    <div class="footer-col">
-      <h5>Connect</h5>
-      <ul>
-        <li><a href="https://nikhilnigam0406.github.io/nikhil_nigam/" target="_blank">📄 Portfolio</a></li>
-        <li><a href="https://www.youtube.com/@nigamGvlog" target="_blank">▶️ YouTube</a></li>
-        <li><a href="https://www.instagram.com/nikhil__nigam0406/" target="_blank">📸 Instagram</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h5>Resources</h5>
-      <ul>
-        <li><a href="https://mailto:nikhilnigam2001@gmail.com/" target="_blank">✉️ Email Support</a></li>
-        <li><a href="https://gemini.google.com/" target="_blank">✨ Ask Gemini AI</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h5>Account</h5>
-      <p>📧 nikhilnigam2001@gmail.com</p>
-      <p>🔐 Password on request</p>
-    </div>
-  </div>
-  <div class="footer-bottom">©2026-2036 Apna Store. All rights reserved. Built with ❤️ for learning.</div>
-</footer>
 
-<script>
-// ═══════════════════════════════════════════
-//  CONFIG
-// ═══════════════════════════════════════════
-const API = 'https://fakestoreapi.com/products';
-const PRODUCTS_PER_PAGE = 8;
-const MOBILE_BREAKPOINT = 768;
 
-let allProducts = [];
-let filteredProducts = [];
-let currentPage = 1;
-let currentFilter = 'all';
-let currentSort = 'default';
-let searchQuery = '';
-let cart = JSON.parse(localStorage.getItem('apna_cart') || '[]');
-let wishlist = JSON.parse(localStorage.getItem('apna_wishlist') || '[]');
-let currentUser = JSON.parse(localStorage.getItem('apna_user') || 'null');
-let users = JSON.parse(localStorage.getItem('apna_users') || '[]');
-let selectedPayment = 'card';
+  <script>
+    // ══════════════════════════════════════
+    //  CONFIG & STATE
+    // ══════════════════════════════════════
+    const PRODUCTS_PER_PAGE = 10;
 
-// Infinite scroll state
-let infiniteScrollEnabled = window.innerWidth <= MOBILE_BREAKPOINT;
-let infiniteScrollPage = 1;
-let isLoadingMore = false;
+    // ── DummyJSON API calls (as requested) ──
+    fetch('https://dummyjson.com/test').then(r => r.json()).then(d => console.log('✅ DummyJSON /test:', d));
+    fetch('https://dummyjson.com/products/1').then(r => r.json()).then(d => console.log('📦 DummyJSON product #1:', d));
 
-// ═══════════════════════════════════════════
-//  NETWORK DETECTION — lightweight vs rich UI
-// ═══════════════════════════════════════════
-function detectNetwork() {
-  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-  if (!conn) return 'fast';
-  if (conn.saveData) return 'slow';
-  if (['slow-2g', '2g'].includes(conn.effectiveType)) return 'slow';
-  return 'fast';
-}
+    let allProducts = [], filteredProducts = [], currentPage = 1, currentFilter = 'all', currentSort = 'default', searchQuery = '', infiniteMode = true, displayedCount = 0;
+    let cart = JSON.parse(localStorage.getItem('apna_cart') || '[]');
+    let wishlist = JSON.parse(localStorage.getItem('apna_wishlist') || '[]');
+    let currentUser = JSON.parse(localStorage.getItem('apna_user') || 'null');
+    let users = JSON.parse(localStorage.getItem('apna_users') || '[]');
+    let selectedPayment = 'card';
 
-function applyNetworkMode() {
-  const speed = detectNetwork();
-  const badge = document.getElementById('networkBadge');
-  if (speed === 'slow') {
-    document.body.classList.add('lightweight');
-    badge.className = 'slow';
-    badge.innerHTML = '⚡ Lightweight mode — saving data on slow connection';
-    badge.style.display = 'flex';
-    setTimeout(() => badge.style.display = 'none', 4500);
-  } else {
-    document.body.classList.remove('lightweight');
-    // Only show fast badge if explicitly fast
-    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-    if (conn && ['4g'].includes(conn.effectiveType)) {
-      badge.className = 'fast';
-      badge.innerHTML = '🚀 Fast connection — full experience loaded';
-      badge.style.display = 'flex';
-      setTimeout(() => badge.style.display = 'none', 2500);
+    // Category colour map  [text, bg]
+    const CAT_COLORS = {
+      'beauty': ['#be185d', '#fdf2f8'], 'fragrances': ['#7c3aed', '#f5f3ff'], 'furniture': ['#c2410c', '#fff7ed'],
+      'groceries': ['#15803d', '#f0fdf4'], 'home-decoration': ['#b45309', '#fffbeb'], 'kitchen-accessories': ['#0f766e', '#f0fdfa'],
+      'laptops': ['#1d4ed8', '#eff6ff'], 'mens-shirts': ['#4338ca', '#eef2ff'], 'mens-shoes': ['#334155', '#f8fafc'],
+      'mens-watches': ['#92400e', '#fffbeb'], 'mobile-accessories': ['#0369a1', '#f0f9ff'], 'motorcycle': ['#b91c1c', '#fef2f2'],
+      'skin-care': ['#be185d', '#fdf2f8'], 'smartphones': ['#1e40af', '#eff6ff'], 'sports-accessories': ['#166534', '#f0fdf4'],
+      'sunglasses': ['#d97706', '#fffbeb'], 'tablets': ['#6d28d9', '#f5f3ff'], 'tops': ['#9d174d', '#fdf2f8'],
+      'vehicle': ['#991b1b', '#fef2f2'], 'womens-bags': ['#831843', '#fdf2f8'], 'womens-dresses': ['#a21caf', '#fdf4ff'],
+      'womens-jewellery': ['#b45309', '#fffbeb'], 'womens-shoes': ['#7e22ce', '#faf5ff'], 'womens-watches': ['#9f1239', '#fff1f2'],
+    };
+    const CAT_ICONS = {
+      'beauty': '💄', 'fragrances': '🌸', 'furniture': '🪑', 'groceries': '🥦', 'home-decoration': '🏡',
+      'kitchen-accessories': '🍳', 'laptops': '💻', 'mens-shirts': '👕', 'mens-shoes': '👟', 'mens-watches': '⌚',
+      'mobile-accessories': '📱', 'motorcycle': '🏍️', 'skin-care': '🧴', 'smartphones': '📲', 'sports-accessories': '⚽',
+      'sunglasses': '🕶️', 'tablets': '📟', 'tops': '👗', 'vehicle': '🚗', 'womens-bags': '👜',
+      'womens-dresses': '👗', 'womens-jewellery': '💍', 'womens-shoes': '👠', 'womens-watches': '⌚',
+    };
+
+    // ══════════════════════════════════════
+    //  TOAST
+    // ══════════════════════════════════════
+    function toast(msg, type = 'success') {
+      const t = document.createElement('div');
+      t.className = `toast ${type}`;
+      const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+      t.innerHTML = `<span>${icons[type] || 'ℹ️'}</span><span>${msg}</span>`;
+      document.getElementById('toast-container').appendChild(t);
+      setTimeout(() => t.remove(), 3200);
     }
-  }
-  // Listen for connection changes
-  if (navigator.connection) {
-    navigator.connection.onchange = applyNetworkMode;
-  }
-}
 
-// ═══════════════════════════════════════════
-//  TOAST
-// ═══════════════════════════════════════════
-function toast(msg, type='success'){
-  const t = document.createElement('div');
-  t.className = `toast ${type}`;
-  const icons = {success:'✅',error:'❌',info:'ℹ️'};
-  t.innerHTML = `<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
-  document.getElementById('toast-container').appendChild(t);
-  setTimeout(()=>t.remove(), 3200);
-}
+    // ══════════════════════════════════════
+    //  DRAWER (Mobile)
+    // ══════════════════════════════════════
+    function toggleDrawer() {
+      document.getElementById('mobileDrawer').classList.toggle('open');
+      document.getElementById('drawerOverlay').classList.toggle('open');
+    }
+    function syncDrawerSearch() {
+      const v = document.getElementById('drawerSearch').value;
+      const si = document.getElementById('searchInput');
+      if (si) si.value = v;
+      searchQuery = v.toLowerCase(); currentPage = 1; applyAll();
+    }
 
-// ═══════════════════════════════════════════
-//  PAGE ROUTING
-// ═══════════════════════════════════════════
-function showPage(name){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById(`page-${name}`).classList.add('active');
-  window.scrollTo(0,0);
-  if(name==='wishlist') renderWishlist();
-  if(name==='cart') renderCart();
-  if(name==='checkout') renderCheckout();
-}
+    // ══════════════════════════════════════
+    //  PAGE ROUTING
+    // ══════════════════════════════════════
+    function showPage(name) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(`page-${name}`).classList.add('active');
+      window.scrollTo(0, 0);
+      if (name === 'wishlist') renderWishlist();
+      if (name === 'cart') renderCart();
+      if (name === 'checkout') renderCheckout();
+    }
 
-// ═══════════════════════════════════════════
-//  AUTH
-// ═══════════════════════════════════════════
-function renderNavUser(){
-  const w = document.getElementById('navUserWrap');
-  if(currentUser){
-    const initial = currentUser.name.charAt(0).toUpperCase();
-    w.innerHTML = `<div class="nav-user" onclick="logout()">
-      <div class="nav-user-avatar">${initial}</div>
-      <span class="nav-user-name">${currentUser.name.split(' ')[0]}</span>
-      <span style="color:rgba(255,255,255,.6);font-size:.75rem">▾</span>
-    </div>`;
-  } else {
-    w.innerHTML = `<button class="nav-btn" onclick="openAuth()">👤 <span>Login</span></button>`;
-  }
-}
-function openAuth(){ document.getElementById('authModal').classList.remove('hidden'); }
-function closeAuth(){ document.getElementById('authModal').classList.add('hidden'); }
-function switchAuthTab(tab){
-  document.getElementById('loginForm').style.display = tab==='login'?'block':'none';
-  document.getElementById('signupForm').style.display = tab==='signup'?'block':'none';
-  document.getElementById('loginTab').classList.toggle('active', tab==='login');
-  document.getElementById('signupTab').classList.toggle('active', tab==='signup');
-}
-function doLogin(){
-  const email = document.getElementById('loginEmail').value.trim();
-  const pass = document.getElementById('loginPass').value;
-  if(!email||!pass){toast('Please fill all fields','error');return;}
-  const user = users.find(u=>u.email===email && u.password===pass);
-  if(!user){toast('Invalid email or password','error');return;}
-  currentUser = {name:user.name, email:user.email};
-  localStorage.setItem('apna_user', JSON.stringify(currentUser));
-  closeAuth(); renderNavUser();
-  toast(`Welcome back, ${user.name.split(' ')[0]}! 👋`);
-}
-function doSignup(){
-  const name = document.getElementById('signupName').value.trim();
-  const email = document.getElementById('signupEmail').value.trim();
-  const pass = document.getElementById('signupPass').value;
-  if(!name||!email||!pass){toast('Please fill all fields','error');return;}
-  if(pass.length<6){toast('Password must be at least 6 characters','error');return;}
-  if(users.find(u=>u.email===email)){toast('Email already registered','error');return;}
-  users.push({name,email,password:pass});
-  localStorage.setItem('apna_users', JSON.stringify(users));
-  currentUser = {name,email};
-  localStorage.setItem('apna_user', JSON.stringify(currentUser));
-  closeAuth(); renderNavUser();
-  toast(`Account created! Welcome, ${name.split(' ')[0]}! 🎉`);
-}
-function logout(){
-  currentUser = null;
-  localStorage.removeItem('apna_user');
-  renderNavUser();
-  toast('Logged out successfully','info');
-}
-
-// ═══════════════════════════════════════════
-//  INFINITE SCROLL TOGGLE
-// ═══════════════════════════════════════════
-function toggleScrollMode(){
-  infiniteScrollEnabled = !infiniteScrollEnabled;
-  const btn = document.getElementById('scrollToggleBtn');
-  const label = document.getElementById('scrollToggleLabel');
-  if(infiniteScrollEnabled){
-    btn.classList.add('active');
-    label.textContent = 'Infinite Scroll';
-    toast('Infinite scroll ON 🔄','info');
-  } else {
-    btn.classList.remove('active');
-    label.textContent = 'Paginated';
-    toast('Paginated view ON 📄','info');
-  }
-  currentPage = 1;
-  infiniteScrollPage = 1;
-  applyAll();
-}
-
-function initScrollToggle(){
-  const btn = document.getElementById('scrollToggleBtn');
-  const label = document.getElementById('scrollToggleLabel');
-  if(infiniteScrollEnabled){
-    btn.classList.add('active');
-    label.textContent = 'Infinite Scroll';
-  } else {
-    btn.classList.remove('active');
-    label.textContent = 'Paginated';
-  }
-}
-
-// ═══════════════════════════════════════════
-//  INFINITE SCROLL — IntersectionObserver
-// ═══════════════════════════════════════════
-function initInfiniteScroll(){
-  const sentinel = document.getElementById('infiniteSentinel');
-  const observer = new IntersectionObserver(entries => {
-    if(entries[0].isIntersecting && infiniteScrollEnabled && !isLoadingMore){
-      const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
-      if(infiniteScrollPage < totalPages){
-        loadMoreProducts();
+    // ══════════════════════════════════════
+    //  AUTH
+    // ══════════════════════════════════════
+    function renderNavUser() {
+      const w = document.getElementById('navUserWrap');
+      if (currentUser) {
+        const i = currentUser.name.charAt(0).toUpperCase();
+        w.innerHTML = `<div class="nav-user" onclick="logout()"><div class="nav-user-avatar">${i}</div><span class="nav-user-name">${currentUser.name.split(' ')[0]}</span><span style="color:rgba(255,255,255,.5);font-size:.7rem">▾</span></div>`;
+      } else {
+        w.innerHTML = `<button class="nav-btn" onclick="openAuth()">👤 <span>Login</span></button>`;
+      }
+      renderDrawerUser();
+    }
+    function renderDrawerUser() {
+      const s = document.getElementById('drawerUserSec');
+      if (!s) return;
+      if (currentUser) {
+        s.innerHTML = `<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <div class="nav-user-avatar" style="width:36px;height:36px;font-size:1rem;">${currentUser.name.charAt(0).toUpperCase()}</div>
+      <div><div style="font-weight:600;font-size:.875rem;">${currentUser.name}</div><div style="font-size:.74rem;color:var(--text2);">${currentUser.email}</div></div>
+    </div>
+    <button onclick="logout();toggleDrawer();" style="background:#fee2e2;color:var(--accent-rose);">🚪 Logout</button>`;
+      } else {
+        s.innerHTML = `<button class="btn-primary" onclick="openAuth();toggleDrawer();">👤 Login / Sign Up</button>`;
       }
     }
-  }, { rootMargin: '200px' });
-  observer.observe(sentinel);
-}
-
-function loadMoreProducts(){
-  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
-  if(infiniteScrollPage >= totalPages || isLoadingMore) return;
-  isLoadingMore = true;
-
-  // Show loading indicator
-  const wrap = document.getElementById('loadMoreWrap');
-  const spinner = document.getElementById('loadMoreSpinner');
-  const btn = document.getElementById('loadMoreBtn');
-  wrap.style.display = 'block';
-  spinner.style.display = 'flex';
-  btn.style.display = 'none';
-
-  // Simulate slight delay for smoother UX feel
-  setTimeout(() => {
-    infiniteScrollPage++;
-    const start = (infiniteScrollPage - 1) * PRODUCTS_PER_PAGE;
-    const page = filteredProducts.slice(start, start + PRODUCTS_PER_PAGE);
-    const grid = document.getElementById('cards');
-    page.forEach((p, i) => {
-      const div = document.createElement('div');
-      div.innerHTML = productCard(p);
-      const card = div.firstElementChild;
-      card.style.animationDelay = `${i * 50}ms`;
-      grid.appendChild(card);
-    });
-
-    isLoadingMore = false;
-    spinner.style.display = 'none';
-
-    if(infiniteScrollPage >= totalPages){
-      wrap.style.display = 'none';
-    } else {
-      // Show manual load-more button as fallback
-      btn.style.display = 'block';
-      // Hide after scroll catches up
-      setTimeout(() => { btn.style.display = 'none'; }, 2000);
+    function openAuth() { document.getElementById('authModal').classList.remove('hidden'); }
+    function closeAuth() { document.getElementById('authModal').classList.add('hidden'); }
+    function switchAuthTab(tab) {
+      document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+      document.getElementById('signupForm').style.display = tab === 'signup' ? 'block' : 'none';
+      document.getElementById('loginTab').classList.toggle('active', tab === 'login');
+      document.getElementById('signupTab').classList.toggle('active', tab === 'signup');
     }
-  }, 350);
-}
-
-// ═══════════════════════════════════════════
-//  PRODUCTS
-// ═══════════════════════════════════════════
-async function fetchProducts(){
-  try{
-    // Show skeleton on slow network
-    if(detectNetwork() === 'slow') showSkeletons();
-    const res = await fetch(API);
-    allProducts = await res.json();
-    buildFilters();
-    applyAll();
-  }catch(e){
-    document.getElementById('loadingWrap').innerHTML = `<p style="color:#ef4444;text-align:center">Failed to load products. Check your connection.</p>`;
-  }
-}
-
-function showSkeletons(){
-  const load = document.getElementById('loadingWrap');
-  const grid = document.getElementById('cards');
-  load.style.display = 'none';
-  grid.style.display = 'flex';
-  grid.innerHTML = Array(8).fill(0).map(() => `
-    <div class="skeleton-card">
-      <div class="skeleton-img"></div>
-      <div class="skeleton-line short"></div>
-      <div class="skeleton-line" style="width:90%;"></div>
-      <div class="skeleton-line" style="width:70%;margin-bottom:16px;"></div>
-    </div>`).join('');
-}
-
-function buildFilters(){
-  const cats = ['all',...new Set(allProducts.map(p=>p.category))];
-  const labels = {all:'All Products','electronics':'Electronics','jewelery':'Jewelry',"men's clothing":"Men's Clothing","women's clothing":"Women's Clothing"};
-  const fs = document.getElementById('filterSection');
-  fs.innerHTML = cats.map(c=>`<button class="filter-btn${c===currentFilter?' active':''}" data-filter="${c}" onclick="setFilter('${c}')">${labels[c]||c}</button>`).join('');
-}
-
-function setFilter(f){
-  currentFilter = f;
-  currentPage = 1;
-  infiniteScrollPage = 1;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('active',b.dataset.filter===f));
-  applyAll();
-}
-
-function handleSearch(){
-  searchQuery = document.getElementById('searchInput').value.toLowerCase();
-  currentPage = 1;
-  infiniteScrollPage = 1;
-  applyAll();
-}
-
-function applySortFilter(){
-  currentSort = document.getElementById('sortSelect').value;
-  currentPage = 1;
-  infiniteScrollPage = 1;
-  applyAll();
-}
-
-function applyAll(){
-  let list = [...allProducts];
-  if(currentFilter!=='all') list = list.filter(p=>p.category===currentFilter);
-  if(searchQuery) list = list.filter(p=>
-    p.title.toLowerCase().includes(searchQuery)||
-    p.description.toLowerCase().includes(searchQuery)||
-    p.category.toLowerCase().includes(searchQuery)
-  );
-  const sorts = {
-    'price-asc':(a,b)=>a.price-b.price,
-    'price-desc':(a,b)=>b.price-a.price,
-    'rating':(a,b)=>b.rating.rate-a.rating.rate,
-    'name':(a,b)=>a.title.localeCompare(b.title)
-  };
-  if(sorts[currentSort]) list.sort(sorts[currentSort]);
-  filteredProducts = list;
-  renderProducts();
-  if(!infiniteScrollEnabled) renderPagination();
-  else { document.getElementById('pagination').innerHTML = ''; }
-}
-
-function renderProducts(){
-  const grid = document.getElementById('cards');
-  const load = document.getElementById('loadingWrap');
-  const none = document.getElementById('noResults');
-  const rc = document.getElementById('resultsCount');
-  load.style.display = 'none';
-  rc.textContent = `${filteredProducts.length} product${filteredProducts.length!==1?'s':''} found`;
-  if(filteredProducts.length===0){
-    grid.style.display='none'; none.style.display='block'; return;
-  }
-  none.style.display='none';
-  grid.style.display='flex';
-
-  if(infiniteScrollEnabled){
-    // Reset to first page for infinite scroll
-    infiniteScrollPage = 1;
-    const firstPage = filteredProducts.slice(0, PRODUCTS_PER_PAGE);
-    grid.innerHTML = firstPage.map(p=>productCard(p)).join('');
-    document.getElementById('loadMoreWrap').style.display = 'none';
-    // Show load-more only if there are more pages
-    if(filteredProducts.length > PRODUCTS_PER_PAGE){
-      const btn = document.getElementById('loadMoreBtn');
-      const wrap = document.getElementById('loadMoreWrap');
-      wrap.style.display = 'block';
-      btn.style.display = 'block';
-      document.getElementById('loadMoreSpinner').style.display = 'none';
+    function doLogin() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const pass = document.getElementById('loginPass').value;
+      if (!email || !pass) { toast('Please fill all fields', 'error'); return; }
+      const user = users.find(u => u.email === email && u.password === pass);
+      if (!user) { toast('Invalid email or password', 'error'); return; }
+      currentUser = { name: user.name, email: user.email };
+      localStorage.setItem('apna_user', JSON.stringify(currentUser));
+      closeAuth(); renderNavUser(); toast(`Welcome back, ${user.name.split(' ')[0]}! 👋`);
     }
-  } else {
-    // Paginated mode
-    const start = (currentPage-1)*PRODUCTS_PER_PAGE;
-    const page = filteredProducts.slice(start, start+PRODUCTS_PER_PAGE);
-    grid.innerHTML = page.map(p=>productCard(p)).join('');
-    document.getElementById('loadMoreWrap').style.display = 'none';
-  }
-}
+    function doSignup() {
+      const name = document.getElementById('signupName').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const pass = document.getElementById('signupPass').value;
+      if (!name || !email || !pass) { toast('Fill all fields', 'error'); return; }
+      if (pass.length < 6) { toast('Password min 6 chars', 'error'); return; }
+      if (users.find(u => u.email === email)) { toast('Email already registered', 'error'); return; }
+      users.push({ name, email, password: pass });
+      localStorage.setItem('apna_users', JSON.stringify(users));
+      currentUser = { name, email }; localStorage.setItem('apna_user', JSON.stringify(currentUser));
+      closeAuth(); renderNavUser(); toast(`Welcome, ${name.split(' ')[0]}! 🎉`);
+    }
+    function logout() {
+      currentUser = null; localStorage.removeItem('apna_user'); renderNavUser(); toast('Logged out', 'info');
+    }
 
-function productCard(p){
-  const inCart = cart.some(c=>c.id===p.id);
-  const inWish = wishlist.some(w=>w.id===p.id);
-  const stars = '⭐'.repeat(Math.round(p.rating.rate));
-  const priceFmt = '₹'+Math.round(p.price*84).toLocaleString('en-IN');
-  // In lightweight mode, don't eagerly load images
-  const imgExtra = detectNetwork()==='slow' ? 'loading="lazy"' : 'loading="eager"';
-  return `<div class="card">
-    ${p.rating.rate>=4.5?'<div class="card-badge">Top Rated</div>':''}
-    <button class="wishlist-btn${inWish?' active':''}" onclick="toggleWishlist(event,${p.id})" title="Wishlist">${inWish?'❤️':'🤍'}</button>
-    <div class="card-img-wrap"><img src="${p.image}" alt="${escHtml(p.title)}" ${imgExtra}></div>
+    // ══════════════════════════════════════
+    //  FETCH from DummyJSON
+    // ══════════════════════════════════════
+    async function fetchProducts() {
+      try {
+        const res = await fetch('https://dummyjson.com/products?limit=194&skip=0');
+        const data = await res.json();
+        allProducts = data.products.map(p => ({
+          id: p.id, title: p.title, description: p.description, price: p.price,
+          discount: p.discountPercentage || 0, rating: p.rating || 0,
+          ratingCount: p.reviews?.length || Math.floor(Math.random() * 400 + 40),
+          stock: p.stock, brand: p.brand || '', category: p.category,
+          image: p.thumbnail, images: p.images || [],
+        }));
+        console.log(`✅ Loaded ${allProducts.length} products from DummyJSON`);
+        buildFilters(); buildCatNav(); buildDrawerCats(); applyAll();
+      } catch (e) {
+        document.getElementById('loadingWrap').innerHTML = `<p style="color:var(--accent-rose);text-align:center;padding:40px">⚠️ Failed to load. Check connection.<br><small>${e.message}</small></p>`;
+        console.error(e);
+      }
+    }
+
+    // ══════════════════════════════════════
+    //  FILTERS
+    // ══════════════════════════════════════
+    function buildFilters() {
+      const cats = ['all', ...new Set(allProducts.map(p => p.category))];
+      document.getElementById('filterSection').innerHTML = cats.map(c => {
+        const icon = c === 'all' ? '🛍️' : (CAT_ICONS[c] || '📦');
+        const lbl = c === 'all' ? 'All Products' : c.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        return `<button class="filter-btn${c === currentFilter ? ' active' : ''}" data-filter="${c}" onclick="setFilter('${c}')">${icon} ${lbl}</button>`;
+      }).join('');
+    }
+    function buildCatNav() {
+      const cats = ['all', ...new Set(allProducts.map(p => p.category))];
+      document.getElementById('catNavBar').innerHTML = cats.map(c => {
+        const icon = c === 'all' ? '🛍️' : (CAT_ICONS[c] || '📦');
+        const lbl = c === 'all' ? 'All' : c.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        return `<span class="cat-nav-link${c === currentFilter ? ' active' : ''}" data-filter="${c}" onclick="setFilterCat('${c}')">${icon} ${lbl}</span>`;
+      }).join('');
+    }
+    function buildDrawerCats() {
+      const cats = [...new Set(allProducts.map(p => p.category))];
+      document.getElementById('drawerCats').innerHTML = cats.map(c => {
+        const col = (CAT_COLORS[c] || ['#6b7280', '#f3f4f6'])[0];
+        const lbl = c.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        return `<button class="drawer-cat-btn" onclick="setFilter('${c}');toggleDrawer();">
+      <span class="drawer-cat-dot" style="background:${col}"></span>${CAT_ICONS[c] || '📦'} ${lbl}
+    </button>`;
+      }).join('');
+    }
+    function setFilter(f) {
+      currentFilter = f; currentPage = 1;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
+      document.querySelectorAll('.cat-nav-link').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
+      applyAll();
+    }
+    function setFilterCat(f) {
+      currentFilter = f; currentPage = 1;
+      document.querySelectorAll('.cat-nav-link').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
+      applyAll();
+    }
+    function handleSearch() { searchQuery = document.getElementById('searchInput').value.toLowerCase(); currentPage = 1; applyAll(); }
+    function applySortFilter() { currentSort = document.getElementById('sortSelect').value; applyAll(); }
+
+    function applyAll() {
+      let list = [...allProducts];
+      if (currentFilter !== 'all') list = list.filter(p => p.category === currentFilter);
+      if (searchQuery) list = list.filter(p => p.title.toLowerCase().includes(searchQuery) || p.description.toLowerCase().includes(searchQuery) || p.category.toLowerCase().includes(searchQuery) || (p.brand || '').toLowerCase().includes(searchQuery));
+      const sorts = { 'price-asc': (a, b) => a.price - b.price, 'price-desc': (a, b) => b.price - a.price, 'rating': (a, b) => b.rating - a.rating, 'discount': (a, b) => b.discount - a.discount, 'name': (a, b) => a.title.localeCompare(b.title) };
+      if (sorts[currentSort]) list.sort(sorts[currentSort]);
+      filteredProducts = list;
+      renderProducts(false);
+      if (!infiniteMode) renderPagination();
+    }
+
+    // ══════════════════════════════════════
+    //  RENDER PRODUCTS
+    // ══════════════════════════════════════
+    function renderProducts(append = false) {
+      const grid = document.getElementById('cards'), load = document.getElementById('loadingWrap'), none = document.getElementById('noResults');
+      const rc = document.getElementById('resultsCount'), sentinel = document.getElementById('scrollSentinel');
+      const allDone = document.getElementById('allLoadedMsg'), lm = document.getElementById('loadingMore');
+      load.style.display = 'none'; lm.classList.remove('show');
+      rc.textContent = `${filteredProducts.length} product${filteredProducts.length !== 1 ? 's' : ''} found`;
+      if (filteredProducts.length === 0) {
+        grid.style.display = 'none'; grid.innerHTML = ''; none.style.display = 'block';
+        sentinel.style.display = 'none'; allDone.style.display = 'none';
+        document.getElementById('pagination').innerHTML = ''; return;
+      }
+      none.style.display = 'none'; grid.style.display = 'flex';
+      if (infiniteMode) {
+        if (!append) { displayedCount = 0; grid.innerHTML = ''; }
+        const batch = filteredProducts.slice(displayedCount, displayedCount + PRODUCTS_PER_PAGE);
+        displayedCount += batch.length;
+        grid.insertAdjacentHTML('beforeend', batch.map(p => productCard(p)).join(''));
+        const hasMore = displayedCount < filteredProducts.length;
+        sentinel.style.display = hasMore ? 'block' : 'none'; allDone.style.display = !hasMore ? 'block' : 'none';
+        document.getElementById('pagination').innerHTML = '';
+      } else {
+        const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
+        grid.innerHTML = filteredProducts.slice(start, start + PRODUCTS_PER_PAGE).map(p => productCard(p)).join('');
+        sentinel.style.display = 'none'; allDone.style.display = 'none';
+      }
+    }
+
+    // ══════════════════════════════════════
+    //  PRODUCT CARD
+    // ══════════════════════════════════════
+    function productCard(p) {
+      const inCart = cart.some(c => c.id === p.id), inWish = wishlist.some(w => w.id === p.id);
+      const stars = '⭐'.repeat(Math.max(0, Math.min(5, Math.round(p.rating))));
+      const priceINR = Math.round(p.price * 84);
+      const origINR = p.discount > 0 ? Math.round(priceINR / (1 - p.discount / 100)) : 0;
+      const col = CAT_COLORS[p.category] || ['#6b7280', '#f3f4f6'];
+      const topBadge = p.discount >= 15 && p.rating >= 4.5;
+      return `<div class="card">
+    ${p.rating >= 4.5 ? `<div class="card-badge badge-top"${topBadge ? '' : ''}>⭐ Top</div>` : ''}
+    ${p.discount >= 15 ? `<div class="card-badge badge-disc" style="top:${p.rating >= 4.5 ? '38px' : '10px'}">🔥 ${Math.round(p.discount)}%</div>` : ''}
+    <button class="wishlist-btn${inWish ? ' active' : ''}" onclick="toggleWishlist(event,${p.id})">${inWish ? '❤️' : '🤍'}</button>
+    <div class="card-img-wrap" style="background:linear-gradient(135deg,${col[1]},#fff);">
+      <img src="${p.image}" alt="${escHtml(p.title)}" loading="lazy" onerror="this.src='https://placehold.co/200x170/f1f5f9/94a3b8?text=No+Image'">
+    </div>
     <div class="card-body">
-      <span class="card-cat">${p.category}</span>
+      <span class="card-cat" style="background:${col[1]};color:${col[0]};border-color:${col[0]}22;">${CAT_ICONS[p.category] || '📦'} ${p.category.replace(/-/g, ' ')}</span>
+      ${p.brand ? `<div class="card-brand">${escHtml(p.brand)}</div>` : ''}
       <div class="card-title">${escHtml(p.title)}</div>
-      <div class="card-rating"><span class="stars">${stars}</span> ${p.rating.rate} (${p.rating.count})</div>
+      <div class="card-rating"><span class="stars">${stars}</span> ${p.rating.toFixed(1)} <span style="color:var(--text3)">(${p.ratingCount})</span></div>
       <div class="card-footer-row">
-        <div class="card-price">${priceFmt}</div>
-        <button class="add-cart-btn${inCart?' in-cart':''}" onclick="toggleCart(event,${p.id})" title="${inCart?'Remove from Cart':'Add to Cart'}">
-          ${inCart?'✓ Added':'🛒 Add'}
-        </button>
+        <div>
+          <div class="card-price">₹${priceINR.toLocaleString('en-IN')}</div>
+          ${p.discount > 0 ? `<div style="display:flex;gap:4px;align-items:center;margin-top:1px;"><span class="card-original">₹${origINR.toLocaleString('en-IN')}</span><span class="card-disc-tag">${Math.round(p.discount)}% off</span></div>` : ''}
+        </div>
+        <button class="add-cart-btn${inCart ? ' in-cart' : ''}" onclick="toggleCart(event,${p.id})">${inCart ? '✓ Added' : '🛒 Add'}</button>
       </div>
     </div>
   </div>`;
-}
-
-// ═══════════════════════════════════════════
-//  PAGINATION — 1 2 3 … 9 10  with Prev / Next
-// ═══════════════════════════════════════════
-function renderPagination(){
-  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
-  const pg = document.getElementById('pagination');
-  if(totalPages <= 1){ pg.innerHTML = ''; return; }
-
-  // Build page number list with ellipsis
-  const pages = [];
-  for(let i = 1; i <= totalPages; i++){
-    if(
-      i === 1 ||
-      i === totalPages ||
-      (i >= currentPage - 1 && i <= currentPage + 1)
-    ){
-      pages.push(i);
     }
-  }
 
-  let html = `<button class="page-btn prev-next" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>← Prev</button>`;
-
-  let prev = 0;
-  for(const p of pages){
-    if(p - prev > 1){
-      html += `<span class="page-ellipsis">…</span>`;
+    // ══════════════════════════════════════
+    //  PAGINATION
+    // ══════════════════════════════════════
+    function renderPagination() {
+      if (infiniteMode) { document.getElementById('pagination').innerHTML = ''; return; }
+      const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+      const pg = document.getElementById('pagination');
+      if (totalPages <= 1) { pg.innerHTML = ''; return; }
+      let pages = [];
+      if (totalPages <= 10) pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+      else if (currentPage <= 5) pages = [1, 2, 3, 4, 5, 6, '...', totalPages - 1, totalPages];
+      else if (currentPage >= totalPages - 4) pages = [1, 2, '...', totalPages - 5, totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+      else pages = [1, 2, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages - 1, totalPages];
+      let html = `<button class="page-btn prev-next" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>← Previous</button>`;
+      pages.forEach(p => {
+        if (p === '...') html += `<span class="page-ellipsis">…</span>`;
+        else html += `<button class="page-btn${p === currentPage ? ' active' : ''}" onclick="goPage(${p})">${p}</button>`;
+      });
+      html += `<button class="page-btn prev-next" onclick="goPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next →</button>`;
+      pg.innerHTML = html;
     }
-    html += `<button class="page-btn${p===currentPage?' active':''}" onclick="goPage(${p})">${p}</button>`;
-    prev = p;
-  }
+    function goPage(n) {
+      const t = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+      if (n < 1 || n > t) return;
+      currentPage = n; renderProducts(false); renderPagination(); window.scrollTo({ top: 200, behavior: 'smooth' });
+    }
 
-  html += `<button class="page-btn prev-next" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>Next →</button>`;
-  pg.innerHTML = html;
-}
+    // ══════════════════════════════════════
+    //  VIEW MODE TOGGLE
+    // ══════════════════════════════════════
+    function toggleViewMode() {
+      infiniteMode = !infiniteMode;
+      const btn = document.getElementById('viewToggleBtn');
+      if (infiniteMode) { btn.textContent = '🔄 Infinite Scroll'; btn.classList.add('active'); }
+      else { btn.textContent = '📑 Page View'; btn.classList.remove('active'); }
+      currentPage = 1; renderProducts(false); if (!infiniteMode) renderPagination();
+    }
 
-function goPage(n){
-  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
-  if(n < 1 || n > totalPages) return;
-  currentPage = n;
-  renderProducts();
-  renderPagination();
-  window.scrollTo({top:200, behavior:'smooth'});
-}
+    // ══════════════════════════════════════
+    //  INFINITE SCROLL OBSERVER
+    // ══════════════════════════════════════
+    const scrollObs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && infiniteMode && displayedCount < filteredProducts.length) {
+        const lm = document.getElementById('loadingMore'); lm.classList.add('show');
+        setTimeout(() => { renderProducts(true); lm.classList.remove('show'); }, 320);
+      }
+    }, { rootMargin: '400px' });
+    document.addEventListener('DOMContentLoaded', () => {
+      const s = document.getElementById('scrollSentinel'); if (s) scrollObs.observe(s);
+      document.getElementById('viewToggleBtn')?.classList.add('active');
+    });
 
-// ═══════════════════════════════════════════
-//  CART
-// ═══════════════════════════════════════════
-function saveCart(){ localStorage.setItem('apna_cart', JSON.stringify(cart)); updateBadges(); }
-
-function toggleCart(e, id){
-  e.stopPropagation();
-  const idx = cart.findIndex(c=>c.id===id);
-  if(idx>-1){ cart.splice(idx,1); toast('Removed from cart','info'); }
-  else {
-    const p = allProducts.find(p=>p.id===id);
-    cart.push({...p, qty:1});
-    toast('Added to cart 🛒');
-  }
-  saveCart();
-  renderProducts();
-}
-
-function updateBadges(){
-  const cq = cart.reduce((s,i)=>s+i.qty,0);
-  document.getElementById('cartBadge').textContent = cq;
-  document.getElementById('wishBadge').textContent = wishlist.length;
-}
-
-function renderCart(){
-  const layout = document.getElementById('cartLayout');
-  const sub = document.getElementById('cartSubtitle');
-  if(cart.length===0){
-    layout.innerHTML = `<div style="grid-column:1/-1"><div class="empty-state"><div class="emoji">🛒</div><h3>Your cart is empty</h3><p>Add some products to get started!</p><button class="btn-outline" onclick="showPage('home')">Browse Products</button></div></div>`;
-    sub.textContent = '0 items';
-    return;
-  }
-  sub.textContent = `${cart.reduce((s,i)=>s+i.qty,0)} item(s)`;
-  const subtotal = cart.reduce((s,i)=>s+i.price*i.qty,0);
-  const subINR = Math.round(subtotal*84);
-  const shipping = subINR > 2000 ? 0 : 99;
-  const tax = Math.round(subINR*0.18);
-  const total = subINR + shipping + tax;
-  layout.innerHTML = `
+    // ══════════════════════════════════════
+    //  CART
+    // ══════════════════════════════════════
+    function saveCart() { localStorage.setItem('apna_cart', JSON.stringify(cart)); updateBadges(); }
+    function toggleCart(e, id) {
+      e.stopPropagation();
+      const idx = cart.findIndex(c => c.id === id);
+      if (idx > -1) { cart.splice(idx, 1); toast('Removed from cart', 'info'); }
+      else { const p = allProducts.find(p => p.id === id); cart.push({ ...p, qty: 1 }); toast('Added to cart 🛒'); }
+      saveCart(); renderProducts(false); if (!infiniteMode) renderPagination();
+    }
+    function updateBadges() {
+      const cq = cart.reduce((s, i) => s + i.qty, 0);
+      document.getElementById('cartBadge').textContent = cq;
+      document.getElementById('wishBadge').textContent = wishlist.length;
+      const dc = document.getElementById('drawerCartCount'), dw = document.getElementById('drawerWishCount');
+      if (dc) dc.textContent = cq || ''; if (dw) dw.textContent = wishlist.length || '';
+    }
+    function renderCart() {
+      const layout = document.getElementById('cartLayout'), sub = document.getElementById('cartSubtitle');
+      if (cart.length === 0) {
+        layout.innerHTML = `<div style="grid-column:1/-1"><div class="empty-state"><div class="emoji">🛒</div><h3>Cart is empty</h3><p>Add some products!</p><button class="btn-outline" onclick="showPage('home')">Browse Products</button></div></div>`;
+        sub.textContent = '0 items'; return;
+      }
+      sub.textContent = `${cart.reduce((s, i) => s + i.qty, 0)} item(s)`;
+      const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+      const subINR = Math.round(subtotal * 84), shipping = subINR > 2000 ? 0 : 99, tax = Math.round(subINR * .18), total = subINR + shipping + tax;
+      layout.innerHTML = `
     <div class="cart-items">
-      ${cart.map(item=>`
-        <div class="cart-item">
-          <img class="cart-item-img" src="${item.image}" alt="${escHtml(item.title)}">
-          <div class="cart-item-info">
-            <div class="cart-item-title">${escHtml(item.title)}</div>
-            <div class="cart-item-cat">${item.category}</div>
-            <div class="cart-item-price">₹${Math.round(item.price*84*item.qty).toLocaleString('en-IN')}</div>
-            <div class="qty-control">
-              <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
-              <span class="qty-val">${item.qty}</span>
-              <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
-            </div>
+      ${cart.map(item => `<div class="cart-item">
+        <img class="cart-item-img" src="${item.image}" alt="${escHtml(item.title)}" onerror="this.src='https://placehold.co/80x80/f1f5f9/94a3b8?text=?'">
+        <div class="cart-item-info">
+          <div class="cart-item-title">${escHtml(item.title)}</div>
+          <div class="cart-item-cat">${item.brand ? escHtml(item.brand) + ' · ' : ''}${item.category}</div>
+          <div class="cart-item-price">₹${Math.round(item.price * 84 * item.qty).toLocaleString('en-IN')}</div>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
+            <span class="qty-val">${item.qty}</span>
+            <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
           </div>
-          <button class="cart-remove" onclick="removeFromCart(${item.id})" title="Remove">🗑️</button>
-        </div>`).join('')}
+        </div>
+        <button class="cart-remove" onclick="removeFromCart(${item.id})">🗑️</button>
+      </div>`).join('')}
     </div>
     <div class="cart-summary">
       <h3>Order Summary</h3>
       <div class="summary-row"><span>Subtotal</span><span>₹${subINR.toLocaleString('en-IN')}</span></div>
-      <div class="summary-row"><span>Shipping</span><span>${shipping===0?'<span style="color:var(--primary);font-weight:600">FREE</span>':'₹'+shipping}</span></div>
+      <div class="summary-row"><span>Shipping</span><span>${shipping === 0 ? '<span style="color:var(--primary);font-weight:600">FREE</span>' : '₹' + shipping}</span></div>
       <div class="summary-row"><span>GST (18%)</span><span>₹${tax.toLocaleString('en-IN')}</span></div>
-      ${shipping>0?'<p style="font-size:.78rem;color:var(--primary);margin:-8px 0 8px">Free shipping on orders above ₹2,000!</p>':''}
-      <div class="coupon-row">
-        <input type="text" id="couponInput" placeholder="Enter coupon code">
-        <button onclick="applyCoupon()">Apply</button>
-      </div>
+      ${shipping > 0 ? '<p style="font-size:.73rem;color:var(--primary);margin:-8px 0 8px">Free shipping above ₹2,000!</p>' : ''}
+      <div class="coupon-row"><input type="text" id="couponInput" placeholder="Coupon code"><button onclick="applyCoupon()">Apply</button></div>
       <div class="summary-row total"><span>Total</span><span>₹${total.toLocaleString('en-IN')}</span></div>
       <button class="checkout-btn" onclick="goCheckout()">Proceed to Checkout →</button>
     </div>`;
-}
+    }
+    function changeQty(id, delta) {
+      const item = cart.find(c => c.id === id); if (!item) return;
+      item.qty = Math.max(1, item.qty + delta); saveCart(); renderCart();
+    }
+    function removeFromCart(id) { cart = cart.filter(c => c.id !== id); saveCart(); renderCart(); toast('Item removed', 'info'); }
+    function applyCoupon() {
+      const code = document.getElementById('couponInput').value.trim().toUpperCase();
+      const codes = { SAVE10: '10% off applied!', APNA20: '20% off applied!', FIRST50: '50% off on first order!' };
+      if (codes[code]) toast('🎉 ' + codes[code]); else toast('Invalid coupon', 'error');
+    }
+    function goCheckout() {
+      if (!currentUser) { toast('Please login to checkout', 'error'); openAuth(); return; }
+      if (cart.length === 0) { toast('Cart is empty', 'error'); return; }
+      showPage('checkout');
+    }
 
-function changeQty(id, delta){
-  const item = cart.find(c=>c.id===id);
-  if(!item) return;
-  item.qty = Math.max(1, item.qty+delta);
-  saveCart();
-  renderCart();
-}
-function removeFromCart(id){
-  cart = cart.filter(c=>c.id!==id);
-  saveCart();
-  renderCart();
-  toast('Item removed','info');
-}
-function applyCoupon(){
-  const code = document.getElementById('couponInput').value.trim().toUpperCase();
-  const codes = {SAVE10:'10% off applied!',APNA20:'20% off applied!',FIRST50:'50% off on first order!'};
-  if(codes[code]) toast('🎉 '+codes[code]);
-  else toast('Invalid coupon code','error');
-}
-function goCheckout(){
-  if(!currentUser){toast('Please login to checkout','error');openAuth();return;}
-  if(cart.length===0){toast('Your cart is empty','error');return;}
-  showPage('checkout');
-}
+    // ══════════════════════════════════════
+    //  WISHLIST
+    // ══════════════════════════════════════
+    function saveWishlist() { localStorage.setItem('apna_wishlist', JSON.stringify(wishlist)); updateBadges(); }
+    function toggleWishlist(e, id) {
+      e.stopPropagation();
+      const idx = wishlist.findIndex(w => w.id === id);
+      if (idx > -1) { wishlist.splice(idx, 1); toast('Removed from wishlist', 'info'); }
+      else { const p = allProducts.find(p => p.id === id); wishlist.push(p); toast('Added to wishlist ❤️'); }
+      saveWishlist(); renderProducts(false); if (!infiniteMode) renderPagination();
+    }
+    function renderWishlist() {
+      const c = document.getElementById('wishlistContent');
+      document.getElementById('wishSubtitle').textContent = `${wishlist.length} saved item(s)`;
+      c.style.display = 'flex';
+      if (wishlist.length === 0) {
+        c.innerHTML = `<div style="flex:1;min-width:100%;"><div class="empty-state"><div class="emoji">💔</div><h3>Wishlist is empty</h3><p>Save products you love!</p><button class="btn-outline" onclick="showPage('home')">Browse Products</button></div></div>`;
+        return;
+      }
+      c.innerHTML = wishlist.map(p => productCard(p)).join('');
+    }
 
-// ═══════════════════════════════════════════
-//  WISHLIST
-// ═══════════════════════════════════════════
-function saveWishlist(){ localStorage.setItem('apna_wishlist', JSON.stringify(wishlist)); updateBadges(); }
-
-function toggleWishlist(e, id){
-  e.stopPropagation();
-  const idx = wishlist.findIndex(w=>w.id===id);
-  if(idx>-1){ wishlist.splice(idx,1); toast('Removed from wishlist','info'); }
-  else {
-    const p = allProducts.find(p=>p.id===id);
-    wishlist.push(p);
-    toast('Added to wishlist ❤️');
-  }
-  saveWishlist();
-  renderProducts();
-}
-
-function renderWishlist(){
-  const c = document.getElementById('wishlistContent');
-  const sub = document.getElementById('wishSubtitle');
-  sub.textContent = `${wishlist.length} saved item(s)`;
-  if(wishlist.length===0){
-    c.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="emoji">💔</div><h3>Your wishlist is empty</h3><p>Save products you love!</p><button class="btn-outline" onclick="showPage('home')">Browse Products</button></div>`;
-    return;
-  }
-  c.innerHTML = wishlist.map(p=>productCard(p)).join('');
-}
-
-// ═══════════════════════════════════════════
-//  CHECKOUT
-// ═══════════════════════════════════════════
-function selectPayment(method){
-  selectedPayment = method;
-  ['card','upi','netbanking','cod'].forEach(m=>{
-    document.getElementById(`pm-${m}`).classList.toggle('active',m===method);
-    document.getElementById(`pay-${m==='netbanking'?'nb':m}-fields`).style.display = m===method?'block':'none';
-  });
-}
-
-function renderCheckout(){
-  if(currentUser){
-    document.getElementById('ck-email').value = currentUser.email || '';
-  }
-  const summary = document.getElementById('checkoutSummary');
-  const subtotal = cart.reduce((s,i)=>s+i.price*i.qty,0);
-  const subINR = Math.round(subtotal*84);
-  const shipping = subINR>2000?0:99;
-  const tax = Math.round(subINR*0.18);
-  const total = subINR+shipping+tax;
-  summary.innerHTML = `
+    // ══════════════════════════════════════
+    //  CHECKOUT
+    // ══════════════════════════════════════
+    function selectPayment(method) {
+      selectedPayment = method;
+      ['card', 'upi', 'netbanking', 'cod'].forEach(m => {
+        document.getElementById(`pm-${m}`).classList.toggle('active', m === method);
+        document.getElementById(`pay-${m === 'netbanking' ? 'nb' : m}-fields`).style.display = m === method ? 'block' : 'none';
+      });
+    }
+    function renderCheckout() {
+      if (currentUser) document.getElementById('ck-email').value = currentUser.email || '';
+      const summary = document.getElementById('checkoutSummary');
+      const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+      const subINR = Math.round(subtotal * 84), shipping = subINR > 2000 ? 0 : 99, tax = Math.round(subINR * .18), total = subINR + shipping + tax;
+      summary.innerHTML = `
     <h3>Order Summary</h3>
-    <div style="max-height:280px;overflow-y:auto;margin-bottom:16px;">
-      ${cart.map(item=>`<div class="mini-item">
-        <img src="${item.image}" alt="${escHtml(item.title)}">
+    <div style="max-height:260px;overflow-y:auto;margin-bottom:14px;">
+      ${cart.map(item => `<div class="mini-item">
+        <img src="${item.image}" alt="${escHtml(item.title)}" onerror="this.src='https://placehold.co/50x50/f1f5f9/94a3b8?text=?'">
         <div><div class="mini-item-title">${escHtml(item.title)}</div>
-        <div class="mini-item-price">₹${Math.round(item.price*84*item.qty).toLocaleString('en-IN')} × ${item.qty}</div></div>
+        <div class="mini-item-price">₹${Math.round(item.price * 84 * item.qty).toLocaleString('en-IN')} × ${item.qty}</div></div>
       </div>`).join('')}
     </div>
-    <div style="border-top:1px solid var(--border);padding-top:12px;">
+    <div style="border-top:1.5px solid var(--border);padding-top:12px;">
       <div class="summary-row"><span>Subtotal</span><span>₹${subINR.toLocaleString('en-IN')}</span></div>
-      <div class="summary-row"><span>Shipping</span><span>${shipping===0?'FREE':'₹'+shipping}</span></div>
+      <div class="summary-row"><span>Shipping</span><span>${shipping === 0 ? 'FREE' : '₹' + shipping}</span></div>
       <div class="summary-row"><span>GST (18%)</span><span>₹${tax.toLocaleString('en-IN')}</span></div>
       <div class="summary-row total"><span>Total</span><span>₹${total.toLocaleString('en-IN')}</span></div>
     </div>
     <button class="place-order-btn" onclick="placeOrder()">Place Order 🎉</button>`;
-}
+    }
+    function placeOrder() {
+      const fname = document.getElementById('ck-fname').value.trim();
+      const addr = document.getElementById('ck-addr1').value.trim();
+      const pin = document.getElementById('ck-pin').value.trim();
+      if (!fname || !addr || !pin) { toast('Fill shipping details', 'error'); return; }
+      if (selectedPayment === 'card' && document.getElementById('ck-cardno').value.replace(/\s/g, '').length < 16) { toast('Enter valid card number', 'error'); return; }
+      if (selectedPayment === 'upi' && !document.getElementById('ck-upi').value.includes('@')) { toast('Enter valid UPI ID', 'error'); return; }
+      const orderId = 'ORD-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+      cart = []; saveCart();
+      document.getElementById('orderId').textContent = orderId;
+      showPage('success'); toast('Order placed! 🎉');
+    }
 
-function placeOrder(){
-  const fname = document.getElementById('ck-fname').value.trim();
-  const addr = document.getElementById('ck-addr1').value.trim();
-  const pin = document.getElementById('ck-pin').value.trim();
-  if(!fname||!addr||!pin){toast('Please fill shipping details','error');return;}
-  if(selectedPayment==='card'){
-    const cardno = document.getElementById('ck-cardno').value.replace(/\s/g,'');
-    if(cardno.length<16){toast('Enter valid card number','error');return;}
-  }
-  if(selectedPayment==='upi'){
-    const upi = document.getElementById('ck-upi').value.trim();
-    if(!upi.includes('@')){toast('Enter valid UPI ID','error');return;}
-  }
-  const orderId = 'ORD-'+Math.random().toString(36).substr(2,8).toUpperCase();
-  cart = [];
-  saveCart();
-  document.getElementById('orderId').textContent = orderId;
-  showPage('success');
-  toast('Order placed successfully! 🎉');
-}
+    // ══════════════════════════════════════
+    //  UTILS
+    // ══════════════════════════════════════
+    function escHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+    function formatCard(el) { el.value = el.value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim(); }
 
-// ═══════════════════════════════════════════
-//  UTILS
-// ═══════════════════════════════════════════
-function escHtml(t){
-  const d = document.createElement('div');
-  d.textContent = t;
-  return d.innerHTML;
-}
-function formatCard(el){
-  el.value = el.value.replace(/\D/g,'').replace(/(.{4})/g,'$1 ').trim();
-}
-
-// ═══════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════
-applyNetworkMode();
-initScrollToggle();
-initInfiniteScroll();
-renderNavUser();
-updateBadges();
-fetchProducts();
-</script>
+    // ══════════════════════════════════════
+    //  INIT
+    // ══════════════════════════════════════
+    renderNavUser();
+    updateBadges();
+    fetchProducts();
+  </script>
 </body>
+
 </html>
